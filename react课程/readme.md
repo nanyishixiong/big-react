@@ -60,4 +60,19 @@ npx husky add .husky/pre-commit "pnpm lint"
 pnpm lint
 ```
 
-当执行 commit 之前就会自动执行 pnpm lint 命令
+当执行 commit 之前就会自动执行 pnpm lint 命令 进行代码规范检查
+
+```
+npx husky add .husky/commit-msg "npx --no-install commitlint -e $HUSKY_GIT_PARAMS"
+```
+
+执行这条命令，.husky 文件夹下出现一个 commit-msg 文件
+
+```sh
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npx --no-install commitlint -e
+```
+
+当执行 commit 之前就会自动执行 npx --no-install commitlint -e 命令 进行 commit 信息规范检查
