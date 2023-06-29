@@ -1,4 +1,5 @@
 import { beginWork } from './beginWork';
+import { completeWork } from './completeWork';
 import { FiberNode, FiberRootNode, createWorkInProgress } from './fiber';
 import { HostRoot } from './workTags';
 let workInProgress: FiberNode | null = null;
@@ -44,6 +45,12 @@ function renderRoot(root: FiberRootNode) {
 			workInProgress = null;
 		}
 	} while (true);
+
+	const finishedWork = root.current.alternate;
+	root.finishedWork = finishedWork;
+
+	//  wip fiberNode树 树中的flags 执行DOM操作
+	// commitRoot(root);
 }
 
 function workLoop() {
@@ -70,6 +77,7 @@ function completeUnitOfWork(fiber: FiberNode) {
 	let node: FiberNode | null = fiber;
 
 	do {
+		completeWork(node);
 		const sibling = node.sibling;
 		// 如果有兄弟节点，继续递归兄弟节点
 		if (sibling !== null) {
