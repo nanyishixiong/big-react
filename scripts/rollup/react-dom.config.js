@@ -2,7 +2,7 @@ import { getPackageJson, resolePkgPath, getBaseRollupPlugins } from './utils';
 import generatePackageJson from 'rollup-plugin-generate-package-json';
 import alias from '@rollup/plugin-alias';
 
-const { name, module } = getPackageJson('react-dom');
+const { name, module, peerDependencies } = getPackageJson('react-dom');
 // react-dom 包的路径
 const pkgPath = resolePkgPath(name);
 // react-dom 产物的路径
@@ -24,6 +24,8 @@ export default [
 				format: 'umd'
 			}
 		],
+		// 排除react的代码，不要将react代码打包进react-dom中，才不会产生两个数据共享层
+		external: [...Object.keys(peerDependencies)],
 		plugins: [
 			...getBaseRollupPlugins(),
 			alias({
