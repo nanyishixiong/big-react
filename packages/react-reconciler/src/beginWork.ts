@@ -1,8 +1,14 @@
 import { ReactElementType } from 'shared/ReactTypes';
 import { FiberNode } from './fiber';
 import { UpdateQueue, processUpdateQueue } from './updateQueue';
-import { HostComponent, HostRoot, HostText } from './workTags';
+import {
+	FunctionComponent,
+	HostComponent,
+	HostRoot,
+	HostText
+} from './workTags';
 import { mountChildFibers, reconcileChildFibers } from './childFibers';
+import { renderWithHooks } from './fiberHooks';
 // beginWork 递归中的向下递归阶段
 export const beginWork = (wip: FiberNode) => {
 	// 比较，返回子fiberNode
@@ -13,6 +19,8 @@ export const beginWork = (wip: FiberNode) => {
 			return updateHostComponent(wip);
 		case HostText:
 			return null;
+		case FunctionComponent:
+			return updateFunctionComponent(wip);
 		default:
 			if (__DEV__) {
 				console.log('beginWork未实现的类型', wip.tag);
@@ -21,6 +29,13 @@ export const beginWork = (wip: FiberNode) => {
 	}
 	return null;
 };
+
+function updateFunctionComponent(wip: FiberNode) {
+	const nextProps = wip.pendingProps;
+	const nextChildren = renderWithHooks(wip);
+	reconcileChildren(wip, nextChildren);
+	return wip.child;
+}
 
 // hostRoot的beginwork工作流程
 // 1、计算状态最新值
