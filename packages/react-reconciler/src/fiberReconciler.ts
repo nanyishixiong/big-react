@@ -14,7 +14,7 @@ import { scheduleUpdateOnFiber } from './workLoop';
 export function createContainer(container: Container) {
 	const hostRootFiber = new FiberNode(HostRoot, {}, null);
 	const root = new FiberRootNode(container, hostRootFiber);
-	hostRootFiber.updateQueue = createUpdateQueue();
+	hostRootFiber.updateQueue = createUpdateQueue<ReactElementType>();
 	return root;
 }
 

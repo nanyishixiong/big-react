@@ -1,6 +1,8 @@
 import { beginWork } from './beginWork';
+import { commitMutationEffects } from './commitWork';
 import { completeWork } from './completeWork';
 import { FiberNode, FiberRootNode, createWorkInProgress } from './fiber';
+import { MutationMask, Noflags } from './fiberFlags';
 import { HostRoot } from './workTags';
 let workInProgress: FiberNode | null = null;
 
@@ -38,6 +40,7 @@ function renderRoot(root: FiberRootNode) {
 		try {
 			// 进入工作循环
 			workLoop();
+			break;
 		} catch (e) {
 			if (__DEV__) {
 				console.warn('workLoop出现错误', e);
@@ -50,7 +53,40 @@ function renderRoot(root: FiberRootNode) {
 	root.finishedWork = finishedWork;
 
 	//  wip fiberNode树 树中的flags 执行DOM操作
-	// commitRoot(root);
+	commitRoot(root);
+}
+
+function commitRoot(root: FiberRootNode) {
+	const finishedWork = root.finishedWork;
+
+	if (finishedWork === null) {
+		return;
+	}
+
+	if (__DEV__) {
+		console.warn('commit阶段开始', finishedWork);
+	}
+
+	// 重置
+	root.finishedWork = null;
+
+	// 判断是否存在3个字阶段需要执行的操作
+	// root 的 flags root 的 subtreeFlags 是否包含MutationMask中的Flags，如果有则存在mutation阶段需要执行的操作
+	const subtreeHasEffect =
+		(finishedWork.subtreeFlags & MutationMask) !== Noflags;
+	const rootHasEffect = (finishedWork.flags & MutationMask) !== Noflags;
+
+	if (subtreeHasEffect || rootHasEffect) {
+		// beforeMutation
+		// mutation Placement
+		commitMutationEffects(finishedWork);
+		// 双缓存树切换
+		root.current = finishedWork;
+
+		// layout
+	} else {
+		root.current = finishedWork;
+	}
 }
 
 function workLoop() {

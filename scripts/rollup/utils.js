@@ -22,7 +22,8 @@ export function getPackageJson(pkgName) {
 
 export function getBaseRollupPlugins({
 	alias = {
-		__DEV__: true // 作用：开发环境下代码中的 __DEV__ 被编译为true，生产环境编译为false
+		__DEV__: true, // 作用：开发环境下代码中的 __DEV__ 被编译为true，生产环境编译为false
+		preventAssignment: true
 	},
 	typescript = {}
 } = {}) {

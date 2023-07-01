@@ -1,4 +1,5 @@
 import {
+	Container,
 	appendInitialChild,
 	createInstance,
 	createTextInstance
@@ -18,7 +19,10 @@ export const completeWork = (wip: FiberNode) => {
 				//update
 			} else {
 				// 1、构建DOM
-				const instance = createInstance(wip.type, newProps);
+				// const instance = createInstance(wip.type, newProps);
+				const instance = createInstance(wip.type);
+				// 2、将DOM插入到DOM树中
+				appendAllChildren(instance, wip);
 				wip.stateNode = instance;
 			}
 			bubbleProperties(wip);
@@ -29,8 +33,6 @@ export const completeWork = (wip: FiberNode) => {
 			} else {
 				// 1、构建DOM
 				const instance = createTextInstance(newProps.content);
-				// 2、将DOM插入到DOM树中
-				appendAllChildren(instance, wip);
 				wip.stateNode = instance;
 			}
 			bubbleProperties(wip);
@@ -46,7 +48,7 @@ export const completeWork = (wip: FiberNode) => {
 	}
 };
 
-function appendAllChildren(parent: FiberNode, wip: FiberNode) {
+function appendAllChildren(parent: Container, wip: FiberNode) {
 	let node = wip.child;
 
 	// 多叉树的前序遍历，向下遍历子节点，然后递归遍历兄弟节点，最后回溯
