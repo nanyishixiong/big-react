@@ -70,7 +70,7 @@ function commitRoot(root: FiberRootNode) {
 	// 重置
 	root.finishedWork = null;
 
-	// 判断是否存在3个字阶段需要执行的操作
+	// 判断是否存在3个子阶段需要执行的操作
 	// root 的 flags root 的 subtreeFlags 是否包含MutationMask中的Flags，如果有则存在mutation阶段需要执行的操作
 	const subtreeHasEffect =
 		(finishedWork.subtreeFlags & MutationMask) !== Noflags;

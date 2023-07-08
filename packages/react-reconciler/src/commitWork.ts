@@ -1,7 +1,24 @@
-import { Container, appendChildToContainer } from 'hostConfig';
+import {
+	Container,
+	appendChildToContainer,
+	commitUpdate,
+	removeChild
+} from 'hostConfig';
 import { FiberNode, FiberRootNode } from './fiber';
-import { MutationMask, Noflags, Flags, Placement } from './fiberFlags';
-import { HostComponent, HostRoot, HostText } from './workTags';
+import {
+	MutationMask,
+	Noflags,
+	Flags,
+	Placement,
+	Update,
+	ChildDeletion
+} from './fiberFlags';
+import {
+	FunctionComponent,
+	HostComponent,
+	HostRoot,
+	HostText
+} from './workTags';
 
 let nextEffect: FiberNode | null = null;
 
@@ -43,9 +60,96 @@ const commitMutationEffectsOnFIber = (finishedWork: FiberNode) => {
 		finishedWork.flags &= ~Placement;
 	}
 
-	// flags Update
-	// flags ChildDeletion
+	// 如果存在 Update 的副作用
+	if ((flags & Update) !== Noflags) {
+		// 执行更新DOM操作
+		commitUpdate(finishedWork);
+		// 删除Update的副作用标记
+		finishedWork.flags &= ~Update;
+	}
+
+	// 如果存在 ChildDeletion 的副作用
+	if ((flags & ChildDeletion) !== Noflags) {
+		const deletions = finishedWork.deleions;
+		if (deletions !== null) {
+			// 对数组中的节点逐一删除
+			deletions.forEach((childToDelete) => {
+				commitDeletion(childToDelete);
+			});
+		}
+		// 删除ChildDeletion的副作用标记
+		finishedWork.flags &= ~ChildDeletion;
+	}
 };
+
+// 删除实际是删除子树，子树中可能有不同类型的节点，需要不同的处理，因此需要递归处理子树
+function commitDeletion(childToDelete: FiberNode) {
+	let rootHostNode: FiberNode | null = null;
+
+	// 递归子树
+	commitNestedComponent(childToDelete, (unmountFiber) => {
+		switch (unmountFiber.tag) {
+			case HostComponent:
+				if (rootHostNode === null) {
+					rootHostNode = unmountFiber;
+				}
+				// TODO 解绑ref
+				return;
+			case HostText:
+				if (rootHostNode === null) {
+					rootHostNode = unmountFiber;
+				}
+				return;
+			case FunctionComponent:
+				// TODO useEffect unmount
+				return;
+			default:
+				if (__DEV__) {
+					console.warn('未处理的unmount类型', unmountFiber);
+				}
+		}
+	});
+
+	// 移除rootHostNode的DOM
+	if (rootHostNode !== null) {
+		const hostParent = getHostParent(childToDelete);
+		if (hostParent !== null) {
+			removeChild((rootHostNode as FiberNode).stateNode, hostParent);
+		}
+	}
+	childToDelete.return = null;
+	childToDelete.child = null;
+}
+
+function commitNestedComponent(
+	root: FiberNode,
+	onCommitUnmount: (fiber: FiberNode) => void
+) {
+	let node = root;
+	while (true) {
+		onCommitUnmount(node);
+
+		if (node.child !== null) {
+			node.child.return = node;
+			node = node.child;
+			continue;
+		}
+
+		// 终止条件
+		if (node === root) {
+			return;
+		}
+
+		while (node.sibling === null) {
+			if (node.return === null || node.return === root) {
+				return;
+			}
+			node = node.return;
+		}
+		node.sibling.return = node.return;
+		node = node.sibling;
+	}
+}
 
 const commitPlacement = (finishedWork: FiberNode) => {
 	if (__DEV__) {

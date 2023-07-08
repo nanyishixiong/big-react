@@ -5,7 +5,8 @@ import {
 	UpdateQueue,
 	createUpdate,
 	createUpdateQueue,
-	enqueueUpdate
+	enqueueUpdate,
+	processUpdateQueue
 } from './updateQueue';
 import { Action } from 'shared/ReactTypes';
 import { scheduleUpdateOnFiber } from './workLoop';
@@ -14,6 +15,7 @@ const { currentDispatcher } = internals;
 
 let currentlyRenderingFiber: FiberNode | null = null;
 let workInProgressHook: Hook | null = null;
+let currentHook: Hook | null = null;
 
 interface Hook {
 	memoizedState: any;
@@ -30,6 +32,7 @@ export function renderWithHooks(wip: FiberNode) {
 
 	if (current !== null) {
 		// update
+		currentDispatcher.current = HooksDispatcherOnUpdate;
 	} else {
 		// mount
 		currentDispatcher.current = HooksDispatcherOnMount;
@@ -37,16 +40,86 @@ export function renderWithHooks(wip: FiberNode) {
 
 	const Component = wip.type;
 	const props = wip.pendingProps;
+	// FC render
 	const children = Component(props);
 
 	// 重置操作
 	currentlyRenderingFiber = null;
+	workInProgressHook = null;
+	currentHook = null;
 	return children;
 }
 
 const HooksDispatcherOnMount: Dispatcher = {
 	useState: mountState
 };
+
+const HooksDispatcherOnUpdate: Dispatcher = {
+	useState: updateState
+};
+
+function updateState<State>(): [State, Dispatch<State>] {
+	// 找到当前useState对应的hook数据
+	const hook = updateWorkInProgresHook();
+
+	// 计算新state
+	const queue = hook.updateQueue as UpdateQueue<State>;
+	const pending = queue.shared.pending;
+
+	if (pending !== null) {
+		const { memoizedState } = processUpdateQueue(hook.memoizedState, pending);
+		hook.memoizedState = memoizedState;
+	}
+
+	return [hook.memoizedState, queue.dispatch as Dispatch<State>];
+}
+
+function updateWorkInProgresHook(): Hook {
+	// TODO render阶段触发的更新
+	let nextCurrentHook: Hook | null;
+
+	if (currentHook === null) {
+		// 这是这个FC update时第一个hook
+		const current = currentlyRenderingFiber?.alternate;
+		if (current !== null) {
+			nextCurrentHook = current?.memoizedState;
+		} else {
+			nextCurrentHook = null;
+		}
+	} else {
+		// 这个FC update时后续的hook
+		nextCurrentHook = currentHook.next;
+	}
+
+	if (nextCurrentHook === null) {
+		throw new Error(
+			`组件${currentlyRenderingFiber?.type}本次执行时的hook比上次执行多`
+		);
+	}
+
+	currentHook = nextCurrentHook as Hook;
+	const newHook: Hook = {
+		memoizedState: currentHook.memoizedState,
+		updateQueue: currentHook.updateQueue,
+		next: null
+	};
+	// 跟mount一样了
+	if (workInProgressHook === null) {
+		// 没在函数组件内调用hook
+		if (currentlyRenderingFiber === null) {
+			throw new Error('请在函数组件内调用Hook');
+		} else {
+			// 第一个hook
+			workInProgressHook = newHook;
+			currentlyRenderingFiber.memoizedState = workInProgressHook;
+		}
+	} else {
+		// update时后续的hook
+		workInProgressHook.next = newHook;
+		workInProgressHook = newHook;
+	}
+	return workInProgressHook;
+}
 
 function mountState<State>(
 	initalsState: (() => State) | State
@@ -64,7 +137,7 @@ function mountState<State>(
 	hook.memoizedState = memoizedState;
 
 	//@ts-ignore
-	const dispatch = dispatchSetState.bind(null, currentDispatcher, queue);
+	const dispatch = dispatchSetState.bind(null, currentlyRenderingFiber, queue);
 	queue.dispatch = dispatch;
 
 	return [memoizedState, dispatch];
@@ -90,7 +163,7 @@ function mountWorkInProgresHook(): Hook {
 	if (workInProgressHook === null) {
 		// 没在函数组件内调用hook
 		if (currentlyRenderingFiber === null) {
-			throw new Error('请在函数组件内调用Hoo');
+			throw new Error('请在函数组件内调用Hook');
 		} else {
 			// 第一个hook
 			workInProgressHook = hook;

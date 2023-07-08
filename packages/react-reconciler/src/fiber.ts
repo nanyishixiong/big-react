@@ -22,6 +22,7 @@ export class FiberNode {
 	flags: Flags;
 	subtreeFlags: Flags;
 	updateQueue: unknown;
+	deleions: FiberNode[] | null;
 
 	constructor(tag: WorkTag, pendingProps: Props, key: Key) {
 		// 实例的属性
@@ -41,7 +42,7 @@ export class FiberNode {
 		// 作为工作单元
 		this.pendingProps = pendingProps; // 准备工作前的props
 		this.memoizedProps = null; // 工作完以后的props
-		this.memoizedState = null; // 更新完成的新state
+		this.memoizedState = null; // 更新完成的新state 不同类型组件存的数据不同，函数组件：hook链表
 		this.updateQueue = null; // 保存
 
 		this.alternate = null; // 指向另一颗Fiber树
@@ -49,6 +50,7 @@ export class FiberNode {
 		// 副作用
 		this.flags = Noflags; // 用于标记fiber 增删改
 		this.subtreeFlags = Noflags; // 用于标记子树的副作用
+		this.deleions = null; // 保存所有要删除的子节点
 	}
 }
 
@@ -83,6 +85,7 @@ export const createWorkInProgress = (
 		wip.pendingProps = pendingProps;
 		wip.flags = Noflags;
 		wip.subtreeFlags = Noflags;
+		wip.deleions = null;
 	}
 	wip.type = current.type;
 	wip.updateQueue = current.updateQueue;
@@ -99,8 +102,8 @@ export function createFiberFromElement(element: ReactElementType): FiberNode {
 	let fiberTag: WorkTag = FunctionComponent;
 	if (typeof type === 'string') {
 		fiberTag = HostComponent;
-	} else if (typeof type === 'function' && __DEV__) {
-		console.log('未定义的type类型', element);
+	} else if (typeof type !== 'function' && __DEV__) {
+		console.warn('未定义的type类型', element);
 	}
 	const fiber = new FiberNode(fiberTag, props, key);
 	fiber.type = type;
