@@ -1,7 +1,6 @@
 // jsx 方法是返回 ReactElement 的数据结构
 import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
 import {
-	Type,
 	Key,
 	Ref,
 	Props,
@@ -17,7 +16,7 @@ import {
  * @param props
  */
 const ReactElement = function (
-	type: Type,
+	type: ElementType,
 	key: Key,
 	ref: Ref,
 	props: Props
