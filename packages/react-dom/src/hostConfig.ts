@@ -53,3 +53,12 @@ export function removeChild(
 ) {
 	container.removeChild(child);
 }
+
+// 在某节点前插入DOM节点
+export function insertChildToContainer(
+	child: Instance,
+	container: Container,
+	before: Instance
+) {
+	container.insertBefore(child, before);
+}

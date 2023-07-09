@@ -7,6 +7,9 @@ import {
 import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
 import { HostText } from './workTags';
 import { ChildDeletion, Placement } from './fiberFlags';
+
+type ExistingChildren = Map<string | number, FiberNode>;
+
 // 根据shouldTrackEffects 判断是否应该标记副作用的flag
 function childReconciler(shouldTrackEffects: boolean) {
 	// 删除节点 将需要删除的节点保存在父节点上 并打上 ChildDeletion 的副作用标记
@@ -22,14 +25,28 @@ function childReconciler(shouldTrackEffects: boolean) {
 			deletions.push(childToDelete);
 		}
 	}
-	// 创建element fiber
+	// 删除节点本身及其所有兄弟节点
+	function deleteRemainingChildren(
+		returnFiber: FiberNode,
+		currentFirstChild: FiberNode | null
+	) {
+		if (!shouldTrackEffects) {
+			return;
+		}
+		let childToDelete = currentFirstChild;
+		while (childToDelete !== null) {
+			deleteChild(returnFiber, childToDelete);
+			childToDelete = childToDelete.sibling;
+		}
+	}
+	// 创建element fiber 单节点diff 更新后是一个节点，就称为单节点
 	function reconcileSingleElenment(
 		returnFiber: FiberNode,
 		currentFiber: FiberNode | null,
 		element: ReactElementType
 	) {
 		const key = element.key;
-		work: if (currentFiber !== null) {
+		while (currentFiber !== null) {
 			// update
 			if (currentFiber.key === key) {
 				// key相同
@@ -38,20 +55,24 @@ function childReconciler(shouldTrackEffects: boolean) {
 						// type相同
 						const existing = useFiber(currentFiber, element.props);
 						existing.return = returnFiber;
+						// 当前节点可复用 标记剩下节点为删除
+						deleteRemainingChildren(returnFiber, currentFiber.sibling);
 						return existing;
 					}
-					// 删掉旧的
-					deleteChild(returnFiber, currentFiber);
-					break work;
+					// key相同type不同 将节点都标记为删除
+					deleteRemainingChildren(returnFiber, currentFiber);
+					break;
 				} else {
 					if (__DEV__) {
 						console.warn('还未实现的react类型', element);
-						break work;
+						break;
 					}
 				}
 			} else {
-				// 删掉旧的
+				// key不同 标记当前旧的节点为删除
 				deleteChild(returnFiber, currentFiber);
+				// 其他节点可能可以复用，继续遍历
+				currentFiber = currentFiber.sibling;
 			}
 		}
 		// 根据element创建fiber
@@ -66,16 +87,19 @@ function childReconciler(shouldTrackEffects: boolean) {
 		currentFiber: FiberNode | null,
 		content: string | number
 	) {
-		if (currentFiber !== null) {
+		while (currentFiber !== null) {
 			// update
 			if (currentFiber.tag === HostText) {
-				// 类型不变
+				// 类型不变 可以复用
 				const existing = useFiber(currentFiber, { content });
 				existing.return = returnFiber;
+				// 标记其他兄弟节点为删除
+				deleteRemainingChildren(returnFiber, currentFiber.sibling);
 				return existing;
 			}
 			// 删掉旧的
 			deleteChild(returnFiber, currentFiber);
+			currentFiber = currentFiber.sibling;
 		}
 		// 创建新节点
 		const fiber = new FiberNode(HostText, { content }, null);
@@ -90,6 +114,120 @@ function childReconciler(shouldTrackEffects: boolean) {
 			fiber.flags |= Placement;
 		}
 		return fiber;
+	}
+
+	function reconcileChildrenArray(
+		returnFiber: FiberNode,
+		currentFirstChild: FiberNode | null,
+		newChild: any[]
+	) {
+		// 最后一个可复用fiber在current中的index
+		let lastPlacedIndex = 0;
+		// 创建的最后一个fiber
+		let lastNewFiber: FiberNode | null = null;
+		// 创建的第一个fiber
+		let firstNewFiber: FiberNode | null = null;
+
+		// 1、将current保存在map中
+		const existingChildren: ExistingChildren = new Map();
+		let current = currentFirstChild;
+		while (current !== null) {
+			const keyTouse = current.key !== null ? current.key : current.index;
+			existingChildren.set(keyTouse, current);
+			current = current.sibling;
+		}
+
+		for (let i = 0; i < newChild.length; i++) {
+			// 2、遍历newChild，寻找是否可复用
+			const after = newChild[i];
+
+			const newFiber = updateFromMap(returnFiber, existingChildren, i, after);
+			// undefined false null 就返回的是null
+			if (newFiber === null) {
+				continue;
+			}
+
+			// 3、标记移动还是插入
+			newFiber.index = i;
+			newFiber.return = returnFiber;
+
+			// 将复用或创建的节点，重新组织成链表，保存在firstNewFiber
+			if (lastNewFiber === null) {
+				lastNewFiber = newFiber;
+				firstNewFiber = newFiber;
+			} else {
+				lastNewFiber.sibling = newFiber;
+				lastNewFiber = lastNewFiber.sibling;
+			}
+
+			if (!shouldTrackEffects) {
+				continue;
+			}
+
+			const current = newFiber.alternate;
+			if (current !== null) {
+				const oldIndex = current.index;
+				if (oldIndex < lastPlacedIndex) {
+					// 移动
+					newFiber.flags |= Placement;
+					continue;
+				} else {
+					// 不移动
+					lastPlacedIndex = oldIndex;
+				}
+			} else {
+				// mount 插入
+				newFiber.flags |= Placement;
+			}
+		}
+		// 4、将map中剩下的节点都删除
+		existingChildren.forEach((fiber) => {
+			deleteChild(returnFiber, fiber);
+		});
+		return firstNewFiber;
+	}
+
+	// 复用节点，创建节点
+	function updateFromMap(
+		returnFiber: FiberNode,
+		existingChildren: ExistingChildren,
+		index: number,
+		element: any
+	): FiberNode | null {
+		const keyTouse = element.key !== null ? element.key : index;
+		const before = existingChildren.get(keyTouse);
+		// HostText
+		if (typeof element === 'string' || typeof element === 'number') {
+			if (before) {
+				if (before.tag === HostText) {
+					existingChildren.delete(keyTouse);
+					return useFiber(before, { content: element + '' });
+				}
+			}
+			return new FiberNode(HostText, { content: element + '' }, null);
+		}
+
+		// ReactElement
+		if (typeof element === 'object' && element !== null) {
+			switch (element.$$typeof) {
+				case REACT_ELEMENT_TYPE:
+					// before 存在的话即key相同
+					if (before) {
+						if (before.type === element.type) {
+							existingChildren.delete(keyTouse);
+							return useFiber(before, element.props);
+						}
+					}
+					return createFiberFromElement(element);
+			}
+
+			// TODO 数组类型
+			if (Array.isArray(element) && __DEV__) {
+				console.warn('还未实现数组类型child');
+			}
+		}
+
+		return null;
 	}
 
 	return function reconcileChildFibers(
@@ -109,9 +247,11 @@ function childReconciler(shouldTrackEffects: boolean) {
 						console.warn('未实现的reconcile类型', newChild);
 					}
 			}
+			// 多节点的情况
+			if (Array.isArray(newChild)) {
+				return reconcileChildrenArray(returnFiber, currentFiber, newChild);
+			}
 		}
-
-		// TODO 多节点的情况
 
 		// HostText
 		if (typeof newChild === 'string' || typeof newChild === 'number') {
