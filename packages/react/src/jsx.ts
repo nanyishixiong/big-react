@@ -1,5 +1,5 @@
 // jsx 方法是返回 ReactElement 的数据结构
-import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
+import { REACT_ELEMENT_TYPE, REACT_FRAGMENT_TYPE } from 'shared/ReactSymbols';
 import {
 	Key,
 	Ref,
@@ -80,6 +80,8 @@ export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
 
 	return ReactElement(type, key, ref, props);
 };
+
+export const Fragment = REACT_FRAGMENT_TYPE;
 
 export const jsxDEV = (type: ElementType, config: any) => {
 	let key: Key = null;
