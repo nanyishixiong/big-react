@@ -1,8 +1,18 @@
 import { beginWork } from './beginWork';
-import { commitMutationEffects } from './commitWork';
+import {
+	commitHookEffectListCreate,
+	commitHookEffectListDestroy,
+	commitHookEffectListUnmount,
+	commitMutationEffects
+} from './commitWork';
 import { completeWork } from './completeWork';
-import { FiberNode, FiberRootNode, createWorkInProgress } from './fiber';
-import { MutationMask, Noflags } from './fiberFlags';
+import {
+	FiberNode,
+	FiberRootNode,
+	PendingPassiveEffects,
+	createWorkInProgress
+} from './fiber';
+import { MutationMask, Noflags, PassiveMask } from './fiberFlags';
 import {
 	Lane,
 	NoLane,
@@ -14,8 +24,15 @@ import {
 import { HostRoot } from './workTags';
 import { flushSyncCallbacks, scheduleSyncCallback } from './syncTaskQueue';
 import { scheduleMicroTask } from 'hostConfig';
+import {
+	unstable_scheduleCallback as scheduleCallback,
+	unstable_NormalPriority as NormalPriority
+} from 'scheduler';
+import { HookHasEffect, Passive } from './hookEffectTags';
+
 let workInProgress: FiberNode | null = null;
 let wipRootRenderLane: Lane = NoLane;
+let rootDoesHasPassiveEffects = false;
 
 function prepareFreshStack(root: FiberRootNode, lane: Lane) {
 	workInProgress = createWorkInProgress(root.current, {});
@@ -128,6 +145,23 @@ function commitRoot(root: FiberRootNode) {
 
 	markRootFinished(root, lane);
 
+	if (
+		(finishedWork.flags & PassiveMask) !== Noflags ||
+		(finishedWork.subtreeFlags & PassiveMask) !== Noflags
+	) {
+		// 存在函数组件需要执行useEffect的回调
+		if (!rootDoesHasPassiveEffects) {
+			// 防止多次调用
+			rootDoesHasPassiveEffects = true;
+			// 调度副作用
+			scheduleCallback(NormalPriority, () => {
+				// 执行副作用
+				flushPassiveEffects(root.pendingPassiveEffects);
+				return;
+			});
+		}
+	}
+
 	// 判断是否存在3个子阶段需要执行的操作
 	// root 的 flags root 的 subtreeFlags 是否包含MutationMask中的Flags，如果有则存在mutation阶段需要执行的操作
 	const subtreeHasEffect =
@@ -137,7 +171,7 @@ function commitRoot(root: FiberRootNode) {
 	if (subtreeHasEffect || rootHasEffect) {
 		// beforeMutation
 		// mutation Placement
-		commitMutationEffects(finishedWork);
+		commitMutationEffects(finishedWork, root);
 		// 双缓存树切换
 		root.current = finishedWork;
 
@@ -145,6 +179,29 @@ function commitRoot(root: FiberRootNode) {
 	} else {
 		root.current = finishedWork;
 	}
+
+	rootDoesHasPassiveEffects = false;
+	ensureRootIsScheduled(root);
+}
+// 执行副作用
+function flushPassiveEffects(pendingPassiveEffects: PendingPassiveEffects) {
+	// 组件卸载的需要调用卸载回调函数
+	pendingPassiveEffects.unmount.forEach((effect) => {
+		commitHookEffectListUnmount(Passive, effect);
+	});
+	pendingPassiveEffects.unmount = [];
+
+	// 需要将上一次的卸载回调函数执行完再创建新的
+	pendingPassiveEffects.update.forEach((effect) => {
+		commitHookEffectListDestroy(Passive | HookHasEffect, effect);
+	});
+
+	pendingPassiveEffects.update.forEach((effect) => {
+		commitHookEffectListCreate(Passive | HookHasEffect, effect);
+	});
+	pendingPassiveEffects.update = [];
+
+	flushSyncCallbacks();
 }
 
 function workLoop() {

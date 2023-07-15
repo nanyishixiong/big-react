@@ -60,12 +60,18 @@ export class FiberNode {
 	}
 }
 
+export interface PendingPassiveEffects {
+	unmount: any[];
+	update: any[];
+}
+
 export class FiberRootNode {
 	container: Container; //保存对应宿主环境挂载的节点
 	current: FiberNode;
 	finishedWork: FiberNode | null; // 保存整个更新流程完成的hostRootFiber
 	pendingLanes: Lanes; // 代表所有未被消费的lane的集合
 	finishedLane: Lane; // 代表本次更新消费的lane
+	pendingPassiveEffects: PendingPassiveEffects; // 保存effect回调函数
 
 	constructor(container: Container, hostFiberRoot: FiberNode) {
 		this.container = container;
@@ -74,6 +80,10 @@ export class FiberRootNode {
 		this.finishedWork = null;
 		this.pendingLanes = NoLanes;
 		this.finishedLane = NoLane;
+		this.pendingPassiveEffects = {
+			unmount: [],
+			update: []
+		};
 	}
 }
 
