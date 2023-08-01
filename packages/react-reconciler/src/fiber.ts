@@ -8,6 +8,7 @@ import {
 import { Flags, Noflags } from './fiberFlags';
 import { Container } from 'hostConfig';
 import { Lane, Lanes, NoLane, NoLanes } from './fiberLanes';
+import { CallbackNode } from 'scheduler';
 
 export class FiberNode {
 	type: any;
@@ -73,6 +74,9 @@ export class FiberRootNode {
 	finishedLane: Lane; // 代表本次更新消费的lane
 	pendingPassiveEffects: PendingPassiveEffects; // 保存effect回调函数
 
+	callbackNode: CallbackNode | null; //
+	callbackPriority: Lane;
+
 	constructor(container: Container, hostFiberRoot: FiberNode) {
 		this.container = container;
 		this.current = hostFiberRoot;
@@ -84,6 +88,9 @@ export class FiberRootNode {
 			unmount: [],
 			update: []
 		};
+
+		this.callbackNode = null;
+		this.callbackPriority = NoLane;
 	}
 }
 
