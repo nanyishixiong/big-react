@@ -1,5 +1,5 @@
 export type Key = string | null;
-export type Ref = any;
+export type Ref = { current: any } | ((instance: any) => void);
 export type Props = any;
 export type ElementType = any;
 

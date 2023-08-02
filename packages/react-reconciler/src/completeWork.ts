@@ -12,11 +12,15 @@ import {
 	HostRoot,
 	HostText
 } from './workTags';
-import { Noflags, Update } from './fiberFlags';
+import { Noflags, Ref, Update } from './fiberFlags';
 import { updateFiberProps } from 'react-dom/src/SyntheticEvent';
 
 function markUpdate(fiber: FiberNode) {
 	fiber.flags |= Update;
+}
+
+function markRef(fiber: FiberNode) {
+	fiber.flags |= Ref;
 }
 
 // completeWork 递归中的回溯阶段
@@ -33,6 +37,10 @@ export const completeWork = (wip: FiberNode) => {
 				// TODO 判断属性变化，如果变化，打上Update标记 在updateQueue中保存变化 等到commitupdate时调用updateFiberProps更新属性
 				// 更新属性时 保存事件回调到DOM上
 				updateFiberProps(wip.stateNode, newProps);
+				// 标记Ref
+				if (current.ref !== wip.ref) {
+					markRef(wip);
+				}
 			} else {
 				// 1、构建DOM
 				// const instance = createInstance(wip.type, newProps);
@@ -40,6 +48,10 @@ export const completeWork = (wip: FiberNode) => {
 				// 2、将DOM插入到DOM树中
 				appendAllChildren(instance, wip);
 				wip.stateNode = instance;
+				// 标记Ref
+				if (wip.ref !== null) {
+					markRef(wip);
+				}
 			}
 			bubbleProperties(wip);
 			return null;

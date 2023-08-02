@@ -3,6 +3,7 @@ import {
 	commitHookEffectListCreate,
 	commitHookEffectListDestroy,
 	commitHookEffectListUnmount,
+	commitLayoutEffects,
 	commitMutationEffects
 } from './commitWork';
 import { completeWork } from './completeWork';
@@ -197,7 +198,11 @@ function performSyncWorkOnRoot(root: FiberRootNode) {
 }
 
 // render阶段
-function renderRoot(root: FiberRootNode, lane: Lane, shouldTimeSlice: boolean) {
+function renderRoot(
+	root: FiberRootNode,
+	lane: Lane,
+	shouldTimeSlice: boolean
+): RootExitStatus {
 	if (__DEV__) {
 		console.log(`开始${shouldTimeSlice ? '并发' : '同步'}更新`);
 	}
@@ -285,6 +290,7 @@ function commitRoot(root: FiberRootNode) {
 		root.current = finishedWork;
 
 		// layout
+		commitLayoutEffects(finishedWork, root);
 	} else {
 		root.current = finishedWork;
 	}
