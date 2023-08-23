@@ -39,13 +39,15 @@ let wipRootRenderLane: Lane = NoLane;
 let rootDoesHasPassiveEffects = false;
 
 type RootExitStatus = number;
-const RootInComplete = 1;
-const RootCompleted = 2;
+const RootInComplete = 1; // 中断执行
+const RootCompleted = 2; // 执行完成
 // TODO 执行过程报错
 
+// 初始化
 function prepareFreshStack(root: FiberRootNode, lane: Lane) {
 	root.finishedLane = NoLane;
 	root.finishedWork = null;
+	// workInProgress 变成重新创建的根节点
 	workInProgress = createWorkInProgress(root.current, {});
 	wipRootRenderLane = lane;
 }
@@ -77,6 +79,8 @@ function ensureRootIsScheduled(root: FiberRootNode) {
 	const curPriority = updateLane;
 	const prevPriority = root.callbackPriority;
 
+	// 时间分片 和 高优先级打断区别就在这
+	// 时间分片前后优先级相同，直接返回。高优先级打断，后者优先级更高，进入下方逻辑继续重新调度
 	if (curPriority === prevPriority) {
 		return;
 	}
@@ -136,6 +140,7 @@ function performConcurrentWorkOnRoot(
 	// 保证useEffect回调已经执行
 	const curCallback = root.callbackNode;
 	const didFlushPassiveEffect = flushPassiveEffects(root.pendingPassiveEffects);
+	// 有副作用被执行完成
 	if (didFlushPassiveEffect) {
 		if (curCallback !== root.callbackNode) {
 			// 当useEffect回调产生的任务优先级比当前任务高，那就打断，当前任务不应该继续调度
@@ -208,6 +213,7 @@ function renderRoot(
 	}
 
 	// 初始化 workInProgress 指向要开始递归的根节点
+	// 高优先级打断之后，render阶段又从根节点开始
 	if (wipRootRenderLane !== lane) {
 		prepareFreshStack(root, lane);
 	}

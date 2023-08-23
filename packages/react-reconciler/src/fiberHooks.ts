@@ -83,15 +83,63 @@ const HooksDispatcherOnMount: Dispatcher = {
 	useState: mountState,
 	useEffect: mountEffect,
 	useTransition: mountTransition,
-	useRef: mountRef
+	useRef: mountRef,
+	useMemo: mountMemo,
+	useCallback: mountCallback
 };
 
 const HooksDispatcherOnUpdate: Dispatcher = {
 	useState: updateState,
 	useEffect: updateEffect,
 	useTransition: updateTransition,
-	useRef: updateRef
+	useRef: updateRef,
+	useMemo: updateMemo,
+	useCallback: updateCallback
 };
+
+function mountCallback<T>(callback: T, deps: any[] | void | null): T {
+	const hook = mountWorkInProgresHook();
+	const nextDeps = deps === undefined ? null : deps;
+	hook.memoizedState = [callback, nextDeps];
+	return callback;
+}
+
+function updateCallback<T>(callback: T, deps: any[] | void | null): T {
+	const hook = updateWorkInProgresHook();
+	const nextDeps = deps === undefined ? null : deps;
+	const preCallback = hook.memoizedState;
+	if (nextDeps !== null) {
+		const prevDeps = preCallback[1];
+		if (areHookInputsEqual(nextDeps, prevDeps)) {
+			return preCallback[0];
+		}
+	}
+	hook.memoizedState = [callback, nextDeps];
+	return callback;
+}
+
+function mountMemo<T>(nextCreate: () => T, deps: any[] | void | null): T {
+	const hook = mountWorkInProgresHook();
+	const nextDeps = deps === undefined ? null : deps;
+	const nextValue = nextCreate();
+	hook.memoizedState = [nextValue, nextDeps];
+	return nextValue;
+}
+
+function updateMemo<T>(nextCreate: () => T, deps: any[] | void | null): T {
+	const hook = updateWorkInProgresHook();
+	const nextDeps = deps === undefined ? null : deps;
+	const preState = hook.memoizedState;
+	if (nextDeps !== null) {
+		const prevDeps = preState[1];
+		if (areHookInputsEqual(nextDeps, prevDeps)) {
+			return preState[0];
+		}
+	}
+	const nextValue = nextCreate();
+	hook.memoizedState = [nextValue, nextDeps];
+	return nextValue;
+}
 
 function mountRef<T>(initialVaule: T): { current: T } {
 	const hook = mountWorkInProgresHook();
@@ -226,9 +274,8 @@ function updateState<State>(): [State, Dispatch<State>] {
 		}
 
 		baseQueue = pending;
+		// 保存在current中
 		current.baseQueue = pending;
-		queue.shared.pending = null;
-
 		// 消费完update需要将其清空
 		queue.shared.pending = null;
 	}

@@ -16,7 +16,7 @@ export class FiberNode {
 	pendingProps: Props;
 	key: Key | null;
 	stateNode: any;
-	ref: Ref;
+	ref: Ref | null;
 
 	return: FiberNode | null;
 	child: FiberNode | null;

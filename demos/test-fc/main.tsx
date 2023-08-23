@@ -4,6 +4,12 @@ import ReactDOM from 'react-dom/client';
 function App() {
 	const [num, updateNum] = useState(100);
 
+	useEffect(() => {
+		updateNum(1);
+		updateNum(2);
+		updateNum(3);
+	}, []);
+
 	return (
 		<ul onClick={() => updateNum(50)}>
 			{new Array(num).fill(0).map((item, index) => (

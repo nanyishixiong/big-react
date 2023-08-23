@@ -50,6 +50,12 @@ export const enqueueUpdate = <State>(
 	updateQueue.shared.pending = update;
 };
 
+// 1. baseState是本次更新参与计算的初始state，memoizedState是上次更新计算的最终state
+// 2. 如果本次更新没有update被跳过，则下次更新开始时baseState === memoizedState
+// 3. 如果本次更新有update被跳过，则本次更新计算出的memoizedState为「考虑优先级」情况下计算的结果，baseState为「最后一个没被跳过的update计算后的结果」，下次更新开始时baseState !== memoizedState
+// 4. 本次更新「被跳过的update及其后面的所有update」都会被保存在baseQueue中参与下次state计算
+// 5. 本次更新「参与计算但保存在baseQueue中的update」，优先级会降低到NoLane
+
 /**
  * updateQueue消费update
  * @param baseState
@@ -88,8 +94,10 @@ export const processUpdateQueue = <State>(
 				const clone = createUpdate(pending.action, pending.lane);
 				// 是不是第一个被跳过的
 				if (newBaseQueueFirst === null) {
+					// 规则4
 					newBaseQueueFirst = clone;
 					newBaseQueueLast = clone;
+					// 规则3
 					newBaseState = newState;
 				} else {
 					(newBaseQueueLast as Update<State>).next = clone;
@@ -97,7 +105,10 @@ export const processUpdateQueue = <State>(
 				}
 			} else {
 				// 优先级足够
+
+				// 之前有被跳过的update，当前update也要加入baseQueue中，对应规则4
 				if (newBaseQueueLast !== null) {
+					// 规则5
 					const clone = createUpdate(pending.action, NoLane);
 					newBaseQueueLast.next = clone;
 					newBaseQueueLast = clone;
@@ -114,8 +125,9 @@ export const processUpdateQueue = <State>(
 			pending = pending.next as Update<any>;
 		} while (pending !== first);
 
+		// 本次计算没有update被跳过
 		if (newBaseQueueLast === null) {
-			// 本次计算没有update被跳过
+			// 规则2
 			newBaseState = newState;
 		} else {
 			newBaseQueueLast.next = newBaseQueueFirst;
