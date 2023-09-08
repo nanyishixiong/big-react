@@ -197,6 +197,13 @@ function childReconciler(shouldTrackEffects: boolean) {
 		return firstNewFiber;
 	}
 
+	function getElementKeyToUse(element: any, index?: number): Key {
+		if (Array.isArray(element)) {
+			return index;
+		}
+		return element.key !== null ? element.key : index;
+	}
+
 	// 复用节点，创建节点
 	function updateFromMap(
 		returnFiber: FiberNode,
@@ -204,7 +211,7 @@ function childReconciler(shouldTrackEffects: boolean) {
 		index: number,
 		element: any
 	): FiberNode | null {
-		const keyToUse = element.key !== null ? element.key : index;
+		const keyToUse = getElementKeyToUse(element, index);
 		const before = existingChildren.get(keyToUse);
 		// HostText
 		if (typeof element === 'string' || typeof element === 'number') {
