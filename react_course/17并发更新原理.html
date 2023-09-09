@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    body {
+      width: 60%;
+      margin: 0 auto;
+    }
+
+    img {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <section id="nice"
+    style="padding-right: 10px; padding-left: 10px; word-break: break-word; line-height: 1.25; letter-spacing: 2px; background-size: 20px 20px; background-position: center center; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif;">
+    <h1 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 25px;"><span class="prefix"
+        style="display: none;"></span><span class="content"
+        style="display: inline-block; color: rgb(119, 48, 152);">第十七课：并发更新的原理</span><span class="suffix"></span></h1>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      <a href="https://github.com/BetaSu/big-react/commit/f778d20be5a99ea05c1daff9992dfd30c14aed69"
+        style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">本节课代码地址</a>
+    </p>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      本节课对标<strong style="color: #916dd5; font-weight: bold;">「React设计原理」</strong>5.1节。</p>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      思考一个问题：我们当前的实现是如何驱动的？</p>
+    <ol style="list-style-type: decimal;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          交互触发更新</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          调度阶段微任务调度（<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ensureRootIsScheduled</code>方法）
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          微任务调度结束，进入<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">render</code>阶段
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">render</code>阶段结束，进入<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">commit</code>阶段
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">commit</code>阶段结束，调度阶段微任务调度（<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ensureRootIsScheduled</code>方法）
+        </section>
+      </li>
+    </ol>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      整体是个大的微任务循环，循环的驱动力是<strong style="color: #916dd5; font-weight: bold;">「微任务调度模块」</strong>。</p>
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">同步示例</span><span
+        class="suffix"></span></h2><img
+      src="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/ldpq4icj0idm.png"
+      alt=""
+      style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;" />
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      示例在两种情况下会造成阻塞：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">work.count</code>数量太多
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          单个<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">work.count</code>工作量太大
+        </section>
+      </li>
+    </ul>
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">并发更新的理论基础</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      并发更新的基础是<strong style="color: #916dd5; font-weight: bold;">「时间切片」</strong>。</p>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      <a href="https://codesandbox.io/s/concurrent-3h48s?file=/src/index.js"
+        style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">在线示例</a>
+    </p>
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">改造示例</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      如果我们想在宏任务中完成任务调度，本质上是个大的宏任务循环，循环的驱动力是<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Scheduler</code>。
+    </p>
+    <blockquote class="multiquote-1" style="margin: 0px; padding: 0px 10px; border-left: 3px solid rgb(219, 219, 219);">
+      <p
+        style="padding-top: 8px; padding-bottom: 8px; font-size: 16px; word-spacing: 2px; margin-top: 0px; margin-bottom: 0px; color: black; line-height: 26px;">
+        理论基础参考《React设计原理》</p>
+    </blockquote>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      在微任务调度中，没有<strong style="color: #916dd5; font-weight: bold;">「优先级」</strong>的概念，对于<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Scheduler</code>存在5种优先级：
+    </p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          ImmediatePriority</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          UserBlockingPriority</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          NormalPriority</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          LowPriority</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          IdlePriority</section>
+      </li>
+    </ul><img
+      src="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/ldpq4icj0xhj.png"
+      alt=""
+      style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;" />
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      需要考虑的情况：</p>
+    <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="border-bottom: 2px solid #d89cf6;">工作过程仅有一个work</span><span class="suffix" style="display: none;"></span>
+    </h3>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      如果仅有一个<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">work</code>，<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Scheduler</code>有个优化路径：如果调度的回调函数的返回值是函数，则会继续调度返回的函数。
+    </p>
+    <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="border-bottom: 2px solid #d89cf6;">工作过程中产生相同优先级的work</span><span class="suffix"
+        style="display: none;"></span></h3>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      如果优先级相同，则不需要开启新的调度。</p>
+    <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="border-bottom: 2px solid #d89cf6;">工作过程中产生更高/低优先级的work</span><span class="suffix"
+        style="display: none;"></span></h3>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      把握一个原则：我们每次选出的都是优先级最高的<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">work</code>。
+    </p>
+  </section>
+  <p><br /></p>
+
+  <body>
+
+</html>
