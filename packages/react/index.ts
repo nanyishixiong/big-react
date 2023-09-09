@@ -2,6 +2,7 @@ import { Dispatcher, resolveDispatcher } from './src/currentDispatcher';
 import { jsx, jsxDEV, isValidElement as isValidElementFn } from './src/jsx';
 import currentDispatcher from './src/currentDispatcher';
 import currentBatchConfig from './src/currentBatchConfig';
+export { createContext } from './src/context';
 
 export const useState: Dispatcher['useState'] = (initialState: any) => {
 	const dispatcher = resolveDispatcher();
@@ -21,6 +22,21 @@ export const useTransition: Dispatcher['useTransition'] = () => {
 export const useRef: Dispatcher['useRef'] = (initialValue) => {
 	const dispatcher = resolveDispatcher();
 	return dispatcher.useRef(initialValue);
+};
+
+export const useCallback: Dispatcher['useCallback'] = (callback, deps) => {
+	const dispatcher = resolveDispatcher();
+	return dispatcher.useCallback(callback, deps);
+};
+
+export const useMemo: Dispatcher['useMemo'] = (nextCreate, deps) => {
+	const dispatcher = resolveDispatcher();
+	return dispatcher.useMemo(nextCreate, deps);
+};
+
+export const useContext: Dispatcher['useContext'] = (context) => {
+	const dispatcher = resolveDispatcher();
+	return dispatcher.useContext(context);
 };
 
 // 内部数据共享层

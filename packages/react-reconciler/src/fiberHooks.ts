@@ -10,7 +10,7 @@ import {
 	enqueueUpdate,
 	processUpdateQueue
 } from './updateQueue';
-import { Action } from 'shared/ReactTypes';
+import { Action, ReactContext } from 'shared/ReactTypes';
 import { scheduleUpdateOnFiber } from './workLoop';
 import { Lane, NoLane, requestUpdateLane } from './fiberLanes';
 import { Flags, PassiveEffect } from './fiberFlags';
@@ -85,7 +85,8 @@ const HooksDispatcherOnMount: Dispatcher = {
 	useTransition: mountTransition,
 	useRef: mountRef,
 	useMemo: mountMemo,
-	useCallback: mountCallback
+	useCallback: mountCallback,
+	useContext: readContext
 };
 
 const HooksDispatcherOnUpdate: Dispatcher = {
@@ -94,8 +95,18 @@ const HooksDispatcherOnUpdate: Dispatcher = {
 	useTransition: updateTransition,
 	useRef: updateRef,
 	useMemo: updateMemo,
-	useCallback: updateCallback
+	useCallback: updateCallback,
+	useContext: readContext
 };
+
+function readContext<T>(context: ReactContext<T>): T {
+	const consumer = currentlyRenderingFiber;
+	if (consumer === null) {
+		throw new Error('只能在函数组件中调用useContext');
+	}
+	const value = context._currentValue;
+	return value;
+}
 
 function mountCallback<T>(callback: T, deps: any[] | void | null): T {
 	const hook = mountWorkInProgresHook();
