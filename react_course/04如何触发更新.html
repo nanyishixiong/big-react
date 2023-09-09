@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      width: 60%;
+      margin: 0 auto;
+    }
+
+    img {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div data-v-70c3a052="" data-v-7d9b0470="" class="content_detail_box" data-v-62a39206="">
+    <div data-v-70c3a052="" id="xePreview" class="xe-preview">
+      <div class="xe-preview__container">
+        <div oncontextmenu="return true" class="xe-preview__content">
+          <section id="nice"
+            style="padding-right: 10px; padding-left: 10px; word-break: break-word; line-height: 1.25; letter-spacing: 2px; background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%); background-size: 20px 20px; background-position: center center; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif;">
+            <p
+              style="margin-top: 10px; margin-bottom: 10px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; font-size: 16px; word-spacing: 2px;">
+              <span
+                style="color: rgb(119, 48, 152); font-size: 25px; font-weight: bold; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; word-spacing: normal;">第四课：如何触发更新</span><br>
+            </p>
+            <h1 style="margin-top: 30px; margin-bottom: 15px; font-size: 25px; font-weight: bold;"><span
+                class="suffix"></span></h1>
+            <p
+              style="margin-top: 10px; margin-bottom: 10px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; font-size: 16px; word-spacing: 2px;">
+              <a href="https://github.com/BetaSu/big-react/commit/25caea0432b10c60b602fbb126269684438ef1c5"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">本节课代码地址</a>
+            </p>
+            <p
+              style="margin-top: 10px; margin-bottom: 10px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; word-spacing: 2px;">
+              常见的触发更新的方式：</p>
+            <ul class=" list-paddingleft-2" style="list-style-type: circle;padding-left:30px;">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="margin-right: 2px; margin-left: 2px; padding: 2px 4px; border-radius: 4px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactDOM.createRoot().render</code>（或老版的<code
+                    style="margin-right: 2px; margin-left: 2px; padding: 2px 4px; border-radius: 4px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactDOM.render</code>）
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  this.setState</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="margin-right: 2px; margin-left: 2px; padding: 2px 4px; border-radius: 4px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">useState</code>的<code
+                    style="margin-right: 2px; margin-left: 2px; padding: 2px 4px; border-radius: 4px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">dispatch</code>方法
+                </section>
+              </li>
+            </ul>
+            <p
+              style="margin-top: 10px; margin-bottom: 10px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; word-spacing: 2px;">
+              我们希望实现一套统一的更新机制，他的特点是：</p>
+            <ul class=" list-paddingleft-2" style="list-style-type: circle;padding-left:30px;">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  兼容上述触发更新的方式</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  方便后续扩展（优先级机制...）</section>
+              </li>
+            </ul>
+            <h2 style="margin-top: 20px; margin-right: 10px; margin-bottom: 0px; font-size: 22px; font-weight: bold;">
+              <span class="content"
+                style="padding-left: 10px; font-size: 18px; display: inline-block; border-left: 5px solid rgb(145, 109, 213);">更新机制的组成部分</span><span
+                class="suffix"></span>
+            </h2>
+            <ul class=" list-paddingleft-2" style="list-style-type: circle;padding-left:30px;">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  代表更新的数据结构 ——&nbsp;<code
+                    style="margin-right: 2px; margin-left: 2px; padding: 2px 4px; border-radius: 4px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Update</code>
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  消费<code
+                    style="margin-right: 2px; margin-left: 2px; padding: 2px 4px; border-radius: 4px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">update</code>的数据结构
+                  ——&nbsp;<code
+                    style="margin-right: 2px; margin-left: 2px; padding: 2px 4px; border-radius: 4px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">UpdateQueue</code>
+                </section>
+              </li>
+            </ul><img
+              data-src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lb1kqa1h05cq.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1"
+              alt=""
+              style="margin: 20px auto; border-radius: 6px; display: block; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;"
+              src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lb1kqa1h05cq.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1">
+            <p
+              style="margin-top: 10px; margin-bottom: 10px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; word-spacing: 2px;">
+              接下来的工作包括：</p>
+            <ul class=" list-paddingleft-2" style="list-style-type: circle;padding-left:30px;">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  实现<code
+                    style="margin-right: 2px; margin-left: 2px; padding: 2px 4px; border-radius: 4px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">mount</code>时调用的API
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  将该API接入上述更新机制中</section>
+              </li>
+            </ul>
+            <p
+              style="margin-top: 10px; margin-bottom: 10px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; word-spacing: 2px;">
+              需要考虑的事情：</p>
+            <ul class=" list-paddingleft-2" style="list-style-type: circle;padding-left:30px;">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  更新可能发生于任意组件，而更新流程是从根节点递归的</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  需要一个统一的根节点保存通用信息</section>
+              </li>
+            </ul>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="margin-bottom: -7px; display: block; background: url(&quot;https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg&quot;) 10px 10px / 40px no-repeat rgb(40, 44, 52); height: 30px; width: 564.812px; border-radius: 5px;"></span><code class="hljs" style="padding: 15px 16px 16px; overflow-x: auto; color: rgb(171, 178, 191); display: -webkit-box; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; font-size: 12px; background: rgb(40, 44, 52); border-radius: 5px;">ReactDOM.createRoot(rootElement).render(<span class="xml" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: rgb(224, 108, 117); line-height: 26px;">App</span>/&gt;</span>)<br></code></pre>
+            <img
+              data-src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lb1kqa1h0lrm.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1"
+              alt=""
+              style="margin: 20px auto; border-radius: 6px; display: block; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;"
+              src="./source/lb1kqa1h0lrm.png">
+          </section>
+          <p><br></p>
+          <p><br></p>
+        </div>
+      </div>
+    </div><!---->
+  </div>
+</body>
+
+</html>

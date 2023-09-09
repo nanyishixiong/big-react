@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      width: 60%;
+      margin: 0 auto;
+    }
+
+    img {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div data-v-70c3a052="" data-v-7d9b0470="" class="content_detail_box" data-v-62a39206="">
+    <div data-v-70c3a052="" id="xePreview" class="xe-preview">
+      <div class="xe-preview__container">
+        <div oncontextmenu="return true" class="xe-preview__content">
+          <section id="nice"
+            style="padding-right: 10px; padding-left: 10px; word-break: break-word; line-height: 1.25; letter-spacing: 2px; background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%); background-size: 20px 20px; background-position: center center; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif;">
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+              <span
+                style="color: rgb(119, 48, 152); font-size: 25px; font-weight: bold; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; word-spacing: normal;">第八课：实现useState</span><br>
+            </p>
+            <h1 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 25px;"><a
+                href="https://github.com/BetaSu/big-react/commit/c27fbabd780ba28e96adc77aacb79879a93e688b"
+                style="font-size: 16px; word-spacing: 2px; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">本节课代码地址</a>
+            </h1>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">hook</code>脱离<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">FC</code>上下文，仅仅是普通函数，如何让他拥有感知上下文环境的能力？
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              比如说：</p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">hook</code>如何知道在另一个<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">hook</code>的上下文环境内执行？
+                </section>
+              </li>
+            </ul>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">function</span>&nbsp;<span class="hljs-title" style="color: #61aeee; line-height: 26px;">App</span>(<span class="hljs-params" style="line-height: 26px;"></span>)&nbsp;</span>{<br>&nbsp;&nbsp;useEffect(<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;执行useState时怎么知道处在useEffect上下文？</span><br>&nbsp;&nbsp;&nbsp;&nbsp;useState(<span class="hljs-number" style="color: #d19a66; line-height: 26px;">0</span>);<br>&nbsp;&nbsp;})<br>}<br></code></pre>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">hook</code>怎么知道当前是<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">mount</code>还是<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">update</code>？
+                </section>
+              </li>
+            </ul>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              解决方案：<strong style="color: #916dd5; font-weight: bold;">「在不同上下文中调用的hook不是同一个函数」</strong>。</p><img
+              data-src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lb80bl500o52.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1"
+              alt=""
+              style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;"
+              src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lb80bl500o52.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1">
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              实现<strong style="color: #916dd5; font-weight: bold;">「内部数据共享层」</strong>时的注意事项：</p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              以浏览器举例，<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Reconciler</code>
+              + <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">hostConfig</code>
+              = <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactDOM</code>
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              增加<strong style="color: #916dd5; font-weight: bold;">「内部数据共享层」</strong>，意味着<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Reconciler</code>与<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React</code>产生关联，进而意味着<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactDOM</code>与<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React</code>产生关联。
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              如果两个包<strong style="color: #916dd5; font-weight: bold;">「产生关联」</strong>，在打包时需要考虑：<strong
+                style="color: #916dd5; font-weight: bold;">「两者的代码是打包在一起还是分开？」</strong></p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              如果打包在一起，意味着打包后的<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactDOM</code>中会包含<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React</code>的代码，那么<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactDOM</code>中会包含一个<strong
+                style="color: #916dd5; font-weight: bold;">「内部数据共享层」</strong>，<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React</code>中也会包含一个<strong
+                style="color: #916dd5; font-weight: bold;">「内部数据共享层」</strong>，这两者不是同一个<strong
+                style="color: #916dd5; font-weight: bold;">「内部数据共享层」</strong>。</p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              而我们希望两者共享数据，所以不希望<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactDOM</code>中会包含<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React</code>的代码。
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">hook</code>如何知道自身数据保存在哪？
+                </section>
+              </li>
+            </ul>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">function</span>&nbsp;<span class="hljs-title" style="color: #61aeee; line-height: 26px;">App</span>(<span class="hljs-params" style="line-height: 26px;"></span>)&nbsp;</span>{<br>&nbsp;&nbsp;<span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;执行useState为什么能返回正确的num？</span><br>&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">const</span>&nbsp;[num]&nbsp;=&nbsp;useState(<span class="hljs-number" style="color: #d19a66; line-height: 26px;">0</span>);<br>}<br></code></pre>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              答案：<strong
+                style="color: #916dd5; font-weight: bold;">「可以记录当前正在render的FC对应fiberNode，在fiberNode中保存hook数据」</strong>
+            </p>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">实现Hooks的数据结构</span><span
+                class="suffix"></span></h2>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">fiberNode</code>中可用的字段：
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  memoizedState</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  updateQueue</section>
+              </li>
+            </ul><img
+              data-src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lb80bl4z05x1.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1"
+              alt=""
+              style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;"
+              src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lb80bl4z05x1.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1">
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              对于<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">FC对应的fiberNode</code>，存在两层数据：
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">fiberNode.memoizedState</code>对应<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Hooks</code>链表
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  链表中每个<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">hook</code>对应自身的数据
+                </section>
+              </li>
+            </ul>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">实现useState</span><span
+                class="suffix"></span></h2>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              包括2方面工作：</p>
+            <ol style="list-style-type: decimal;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  实现<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">mount</code>时<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">useState</code>的实现
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  实现<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">dispatch</code>方法，并接入现有更新流程内
+                </section>
+              </li>
+            </ol>
+          </section>
+          <p><br></p>
+        </div>
+      </div>
+    </div><!---->
+  </div>
+</body>
+
+</html>

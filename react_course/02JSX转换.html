@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      width: 60%;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div data-v-70c3a052="" data-v-7d9b0470="" class="content_detail_box" data-v-62a39206="">
+    <div data-v-70c3a052="" id="xePreview" class="xe-preview">
+      <div class="xe-preview__container">
+        <div oncontextmenu="return true" class="xe-preview__content">
+          <section id="nice"
+            style="padding-right: 10px; padding-left: 10px; word-break: break-word; line-height: 1.25; letter-spacing: 2px; background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%); background-size: 20px 20px; background-position: center center; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif;">
+            <p
+              style="margin-top: 10px; margin-bottom: 10px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; font-size: 16px; word-spacing: 2px;">
+              <span
+                style="color: rgb(119, 48, 152); font-size: 25px; font-weight: bold; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; word-spacing: normal;">第二课：JSX转换</span><br>
+            </p>
+            <h1 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 25px;"><span
+                class="suffix"></span></h1>
+            <p
+              style="margin-top: 10px; margin-bottom: 10px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; font-size: 16px; word-spacing: 2px;">
+              <a href="https://github.com/BetaSu/big-react/commit/cb7cc007c64cd696d7199020797ddf503e41841c"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">本节课代码地址</a>
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              React项目结构：</p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">react</code>（宿主环境无关的公用方法）
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">react-reconciler</code>（协调器的实现，宿主环境无关）
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  各种宿主环境的包</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">shared</code>（公用辅助方法，宿主环境无关）
+                </section>
+              </li>
+            </ul>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              本节课将实现的JSX转换属于<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">react</code>包。
+            </p>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">JSX转换是什么</span><span
+                class="suffix"></span>
+            </h2>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <a href="https://babeljs.io/repl#?browsers=defaults&amp;build=&amp;builtIns=false&amp;corejs=3.6&amp;spec=false&amp;loose=false&amp;code_lz=DwEwlgbgfAjATAZmAenNIA&amp;debug=false&amp;forceAllTransforms=false&amp;shippedProposals=false&amp;circleciRepo=&amp;evaluate=false&amp;fileSize=false&amp;timeTravel=false&amp;sourceType=module&amp;lineWrap=true&amp;presets=react%2Cstage-2&amp;prettier=false&amp;targets=&amp;version=7.19.5&amp;externalPlugins=&amp;assumptions=%7B%7D"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">JSX转换
+                playground</a>
+            </p>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">import</span>&nbsp;{&nbsp;jsx&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">as</span>&nbsp;_jsx&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">from</span>&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"react/jsx-runtime"</span>;<br><br><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">/*#__PURE__*/</span>_jsx(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"div"</span>,&nbsp;{<br>&nbsp;&nbsp;<span class="hljs-attr" style="color: #d19a66; line-height: 26px;">children</span>:&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"123"</span><br>});<br><br><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;或</span><br><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">/*#__PURE__*/</span>React.createElement(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"div"</span>,&nbsp;<span class="hljs-literal" style="color: #56b6c2; line-height: 26px;">null</span>,&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"123"</span>);<br></code></pre>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              包括两部分：</p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    编译时</p>
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    运行时：<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>方法或<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React.createElement</code>方法的实现（包括dev、prod两个环境）
+                  </p>
+                </section>
+              </li>
+            </ul>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">编译时</code>由<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">babel</code>编译实现，我们来实现<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">运行时</code>，工作量包括：
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  实现<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>方法
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  实现打包流程</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  实现调试打包结果的环境</section>
+              </li>
+            </ul>
+            <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="border-bottom: 2px solid #d89cf6;">实现jsx方法</span><span class="suffix"
+                style="display: none;"></span>
+            </h3>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              包括：</p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsxDEV方法</code>（dev环境）
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>方法（prod环境）
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React.createElement</code>方法
+                </section>
+              </li>
+            </ul>
+            <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="border-bottom: 2px solid #d89cf6;">实现打包流程</span><span class="suffix"
+                style="display: none;"></span>
+            </h3>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              对应上述两3方法，打包对应文件：</p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    <code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">react/jsx-dev-runtime.js</code>（dev环境）
+                  </p>
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    <code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">react/jsx-rumtime.js</code>（prod环境）
+                  </p>
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    <code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React</code>
+                  </p>
+                </section>
+              </li>
+            </ul>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              打包流程中需要安装的<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">rollup plugin</code>与<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">node</code>包：
+            </p>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><br>pnpm&nbsp;i&nbsp;-D&nbsp;-w&nbsp;rimraf&nbsp;rollup-plugin-generate-package-json&nbsp;rollup-plugin-typescript2&nbsp;@rollup/plugin-commonjs<br></code></pre>
+            <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="border-bottom: 2px solid #d89cf6;">调试打包结果</span><span class="suffix"
+                style="display: none;"></span>
+            </h3>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <a href="https://pnpm.io/zh/cli/link"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">pnpm
+                link文档</a>
+            </p><img
+              data-src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/law7jksx0wjf.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1"
+              alt=""
+              style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;"
+              src="./source/law7jksx0wjf.png">
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              这种方式的优点：可以模拟实际项目引用<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React</code>的情况
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              缺点：对于我们当前开发<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">big-react</code>来说，略显繁琐。对于开发过程，更期望的是热更新效果。
+            </p>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">补充知识</span><span
+                class="suffix"></span>
+            </h2>
+            <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="border-bottom: 2px solid #d89cf6;"><code>@rollup/plugin-commonjs</code>插件的作用</span><span
+                class="suffix" style="display: none;"></span>
+            </h3>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">rollup</code>原生支持<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ESM</code>格式，所以对于<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">CJS</code>格式的包，我们需要先将它用该插件转为<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ESM</code>格式。
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              这里使用该插件是因为他是<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">rollup</code>中最常见的插件，加上有备无患。
+            </p>
+            <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="border-bottom: 2px solid #d89cf6;">执行<code>pnpm link --global</code>时报错</span><span
+                class="suffix" style="display: none;"></span>
+            </h3>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              如果报如下错误：</p>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">ERROR&nbsp;&nbsp;Unable&nbsp;to&nbsp;find&nbsp;the&nbsp;global&nbsp;bin&nbsp;directory<br></code></pre>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              结局方案参考<a href="https://juejin.cn/post/7147206776838946823"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">解决pnpm
+                升级之后全局安装出现异常问题</a></p>
+            <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="border-bottom: 2px solid #d89cf6;">影响<code>JSX</code>转换的因素</span><span class="suffix"
+                style="display: none;"></span>
+            </h3>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              有些同学发现：在源码中<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>的<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">key</code>属性是第三个传参，但视频中实现<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">createElement</code>时是从<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">config</code>参数中获取。造成这些区别的原因如下：
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  在测试用例（后续课程会实现）中使用的是<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">createElement</code>，在打包后代码中使用的是<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>。虽然这两者最后都是生成<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactElement</code>，但他们的传参是不同的。
+                </section>
+              </li>
+            </ul>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>的参数如下：
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    对于开发环境，<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsxDEV</code>参数依次为<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">type</code>、<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">props</code>、<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">key</code>、<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">source</code>、<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">self</code>。其中后两者为开发环境用于调试的参数
+                  </p>
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    对于生产环境，<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>参数依次为<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">type</code>、<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">props</code>、<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">key</code>
+                  </p>
+                </section>
+              </li>
+            </ul>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">key</code>作为一个单独的传参，为了体现了他的特殊性（与节点稳定相关），所以与其他<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">props</code>区分开。
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">createElement</code>的参数依次为<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">type</code>、<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">props</code>、<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">...children</code>。其中<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">children</code>及后续其他传参经过转换都会作为<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">children</code>属性，比如对于：
+            </p>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">ul</span>&gt;</span><br>&nbsp;&nbsp;<span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">li</span>&gt;</span>1<span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">li</span>&gt;</span><br><span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">ul</span>&gt;</span><br><br><span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">ul</span>&gt;</span><br>&nbsp;&nbsp;<span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">li</span>&gt;</span>1<span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">li</span>&gt;</span><br>&nbsp;&nbsp;<span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">li</span>&gt;</span>2<span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">li</span>&gt;</span><br><span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">ul</span>&gt;</span><br></code></pre>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              转换结果为：</p>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">React.createElement(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"ul"</span>,&nbsp;<span class="hljs-literal" style="color: #56b6c2; line-height: 26px;">null</span>,&nbsp;<br>&nbsp;&nbsp;React.createElement(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"li"</span>,&nbsp;<span class="hljs-literal" style="color: #56b6c2; line-height: 26px;">null</span>,&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"1"</span>)<br>);<br><br>React.createElement(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"ul"</span>,&nbsp;<span class="hljs-literal" style="color: #56b6c2; line-height: 26px;">null</span>,&nbsp;<br>&nbsp;&nbsp;React.createElement(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"li"</span>,&nbsp;<span class="hljs-literal" style="color: #56b6c2; line-height: 26px;">null</span>,&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"1"</span>),&nbsp;<br>&nbsp;&nbsp;React.createElement(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"li"</span>,&nbsp;<span class="hljs-literal" style="color: #56b6c2; line-height: 26px;">null</span>,&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">"2"</span>)<br>);<br></code></pre>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">createElement</code>与<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>之所以会有这些区别更详细的原因可以参考<a
+                href="https://github.com/reactjs/rfcs/blob/createlement-rfc/text/0000-create-element-changes.md#dev-only-transforms"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">createlement-rfc</a>
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              所以结论是，由于以下情况传参都有区别：</p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    <code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">createElement</code>与<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>
+                  </p>
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    <code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>在生产环境与开发环境
+                  </p>
+                </section>
+              </li>
+            </ul>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              所以我们起码需要实现<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">createElement</code>与<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>这2个<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">API</code>，如果为了更高的源码还原度，我们甚至应该实现3个版本（<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">createElement</code>与生产、开发环境下的<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>），以应对使用不同<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">API</code>的场景（比如对于部分测试用例，使用的是<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">createElement</code>）
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              本节课程没有区分<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx</code>与<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">createElement</code>，这是不严谨的。<span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">这么做可能造成的后果之一是</span><strong
+                style="font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; color: rgb(145, 109, 213); font-weight: bold;">「由于key传参位置不同，导致在某些情况下key丢失」</strong><span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">。比如应该用</span><code
+                style="background: none; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder;">jsx</code><span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">的场景（</span><code
+                style="background: none; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder;">key</code><span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">是第三个参数），使用了</span><code
+                style="background: none; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder;">createElement</code><span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">（</span><code
+                style="background: none; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder;">key</code><span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">在第二个参数</span><code
+                style="background: none; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder;">props</code><span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">中），就会导致</span><code
+                style="background: none; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder;">key</code><span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">被当成</span><code
+                style="background: none; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder;">createElement</code><span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">的</span><code
+                style="background: none; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder;">children prop</code><span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">，进而导致</span><code
+                style="background: none; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder;">key</code><span
+                style="color: unset; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; font-weight: unset; text-decoration-line: unset;">丢失。解决办法如下，学员可自行更新到代码中：</span>
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <a href="https://github.com/BetaSu/big-react/commit/c29a13c74660e75ee7cf78bf46a6b9cfcbb4e2e9"
+                style="font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">fix:
+                jsx与createElement实现一致导致key丢失的问题</a>
+            </p>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">纠错</span><span
+                class="suffix"></span>
+            </h2>
+            <ol style="list-style-type: decimal;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    <code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jsx-runtime</code>的<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">output</code>中输出格式参数名应为<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">format</code>而不是<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">formate</code>
+                  </p>
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <p
+                    style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+                    <code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">react</code>的<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">output</code>中<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">name</code>字段的值应为<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">react</code>而不是<code
+                      style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">index.js</code>
+                  </p>
+                </section>
+              </li>
+            </ol>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              对于<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">umd</code>的格式，如果是以<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">esm</code>引入，则两者没有区别。但如果在浏览器引入，前者会挂载<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">window.react</code>，而后者会挂载<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">window.index</code>。
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              详见<a href="ttps://rollupjs.org/guide/en/#outputname"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">rollup文档#outputname</a>
+            </p>
+          </section>
+          <p><br></p>
+        </div>
+      </div>
+    </div><!---->
+  </div>
+</body>
+
+</html>

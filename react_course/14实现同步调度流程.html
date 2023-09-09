@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    body {
+      width: 60%;
+      margin: 0 auto;
+    }
+
+    img {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <section id="nice"
+    style="padding-right: 10px; padding-left: 10px; word-break: break-word; line-height: 1.25; letter-spacing: 2px; background-size: 20px 20px; background-position: center center; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif;">
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      课前须知：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <p
+            style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+            为了更好的学习体验，请购课后加卡颂微信（kasong555），发送课程购买截图，拉你进专属学习群</p>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <p
+            style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+            参与<a href="https://wj.qq.com/s2/11444184/b3e4/"
+              style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">2个月通关React挑战</a>，返现金
+          </p>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <p
+            style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+            <a href="https://github.com/BetaSu/big-react/commit/b77e05c54ff49039c9872971dfd10069c4f05730"
+              style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">本节课代码地址</a>
+          </p>
+        </section>
+      </li>
+    </ul>
+    <h1 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 25px;"><span class="prefix"
+        style="display: none;"></span><span class="content"
+        style="display: inline-block; color: rgb(119, 48, 152);">第十四课：实现同步调度流程</span><span class="suffix"></span></h1>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      更新到底是同步还是异步？</p>
+    <pre class="custom"
+      style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #e6c07b; line-height: 26px;">App</span>&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">extends</span>&nbsp;<span class="hljs-title" style="color: #e6c07b; line-height: 26px;">React</span>.<span class="hljs-title" style="color: #e6c07b; line-height: 26px;">Component</span>&nbsp;</span>{<br/>&nbsp;&nbsp;&nbsp;&nbsp;onClick()&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">this</span>.setState({<span class="hljs-attr" style="color: #d19a66; line-height: 26px;">a</span>:&nbsp;<span class="hljs-number" style="color: #d19a66; line-height: 26px;">1</span>});<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-built_in" style="color: #e6c07b; line-height: 26px;">console</span>.log(<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">this</span>.state.a);<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;...省略其他代码</span><br/>}<br/></code></pre>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      当前的现状：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          从触发更新到<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">render</code>，再到<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">commit</code>都是同步的
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          多次触发更新会重复多次更新流程</section>
+      </li>
+    </ul>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      可以改进的地方：<strong style="color: #916dd5; font-weight: bold;">「多次触发更新，只进行一次更新流程」</strong></p>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      <code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Batched Updates</code>（批处理）：多次触发更新，只进行一次更新流程
+    </p>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      将多次更新合并为一次，理念上有点类似防抖、节流，我们需要考虑合并的时机是：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          宏任务？</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          微任务？</section>
+      </li>
+    </ul>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      用三款框架实现<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Batched Updates</code>，打印结果不同：
+    </p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <a href="https://codesandbox.io/s/react-concurrent-mode-demo-forked-t8mil?file=/src/index.js"
+            style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">React</a>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <a href="https://codesandbox.io/s/crazy-rosalind-wqj0c?file=/src/App.vue"
+            style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">Vue3</a>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <a href="https://svelte.dev/repl/1e4e4e44b9ca4e0ebba98ef314cfda54?version=3.44.1"
+            style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">Svelte</a>
+        </section>
+      </li>
+    </ul>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      结论：<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React</code>批处理的时机既有宏任务，也有微任务。
+    </p>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      本节课我们来实现<strong style="color: #916dd5; font-weight: bold;">「微任务的批处理」</strong>。</p>
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">新增调度阶段</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      既然我们需要<strong style="color: #916dd5; font-weight: bold;">「多次触发更新，只进行一次更新流程」</strong>，意味着我们要将更新合并，所以在：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">render</code>阶段
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">commit</code>阶段
+        </section>
+      </li>
+    </ul>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      的基础上增加<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">schedule</code>阶段（调度阶段）
+    </p><img
+      src="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lcj6f2cq07p3.png"
+      alt=""
+      style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;" />
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">对update的调整</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      <strong style="color: #916dd5; font-weight: bold;">「多次触发更新，只进行一次更新流程」</strong>中<strong
+        style="color: #916dd5; font-weight: bold;">「多次触发更新」</strong>意味着对于同一个<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">fiber</code>，会创建多个<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">update</code>：
+    </p>
+    <pre class="custom"
+      style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">const</span>&nbsp;onClick&nbsp;=&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;{<br/>&nbsp;&nbsp;<span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;创建3个update</span><br/>&nbsp;&nbsp;updateCount(<span class="hljs-function" style="line-height: 26px;">(<span class="hljs-params" style="line-height: 26px;">count</span>)&nbsp;=&gt;</span>&nbsp;count&nbsp;+&nbsp;<span class="hljs-number" style="color: #d19a66; line-height: 26px;">1</span>);<br/>&nbsp;&nbsp;updateCount(<span class="hljs-function" style="line-height: 26px;">(<span class="hljs-params" style="line-height: 26px;">count</span>)&nbsp;=&gt;</span>&nbsp;count&nbsp;+&nbsp;<span class="hljs-number" style="color: #d19a66; line-height: 26px;">1</span>);<br/>&nbsp;&nbsp;updateCount(<span class="hljs-function" style="line-height: 26px;">(<span class="hljs-params" style="line-height: 26px;">count</span>)&nbsp;=&gt;</span>&nbsp;count&nbsp;+&nbsp;<span class="hljs-number" style="color: #d19a66; line-height: 26px;">1</span>);<br/>};<br/></code></pre>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      <strong style="color: #916dd5; font-weight: bold;">「多次触发更新，只进行一次更新流程」</strong>，意味着要达成3个目标：</p>
+    <ol style="list-style-type: decimal;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          需要实现一套优先级机制，每个更新都拥有优先级</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          需要能够合并一个宏任务/微任务中触发的所有更新</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          需要一套算法，用于决定哪个优先级优先进入render阶段</section>
+      </li>
+    </ol><img
+      src="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lcj6f2cq0x2o.png"
+      alt=""
+      style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;" />
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">实现目标1：Lane模型</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      包括：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>（二进制位，代表优先级）
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lanes</code>（二进制位，代表<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>的集合）
+        </section>
+      </li>
+    </ul>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      其中：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>作为<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">update</code>的优先级
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lanes</code>作为<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>的集合
+        </section>
+      </li>
+    </ul>
+    <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="border-bottom: 2px solid #d89cf6;">lane的产生</span><span class="suffix" style="display: none;"></span></h3>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      对于不同情况触发的更新，产生<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>。为后续不同事件产生不同优先级更新做准备。
+    </p>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      如何知道哪些<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>被消费，还剩哪些<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>没被消费？
+    </p>
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">对FiberRootNode的改造</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      需要增加如下字段：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          代表所有未被消费的<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>的集合
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          代表本次更新消费的<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>
+        </section>
+      </li>
+    </ul><img
+      src="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lcj6f2cr03va.png"
+      alt=""
+      style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;" />
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">实现目标2、3</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      需要完成两件事：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          实现「某些判断机制」，选出一个<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          实现类似防抖、节流的效果，合并宏/微任务中触发的更新</section>
+      </li>
+    </ul>
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">render阶段的改造</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      <code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">processUpdateQueue</code>方法消费<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">update</code>时需要考虑：
+    </p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">lane</code>的因素
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">update</code>现在是一条链表，需要遍历
+        </section>
+      </li>
+    </ul>
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">commit阶段的改造</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      移除<strong style="color: #916dd5; font-weight: bold;">「本次更新被消费的lane」</strong>。</p>
+  </section>
+  <p><br /></p>
+
+  <body>
+
+</html>

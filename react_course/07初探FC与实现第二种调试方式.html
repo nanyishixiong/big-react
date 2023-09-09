@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div data-v-70c3a052="" data-v-7d9b0470="" class="content_detail_box" data-v-62a39206="">
+    <div data-v-70c3a052="" id="xePreview" class="xe-preview">
+      <div class="xe-preview__container">
+        <div oncontextmenu="return true" class="xe-preview__content">
+          <section id="nice"
+            style="padding-right: 10px; padding-left: 10px; word-break: break-word; line-height: 1.25; letter-spacing: 2px; background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%); background-size: 20px 20px; background-position: center center; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif;">
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+              <span
+                style="color: rgb(119, 48, 152); font-size: 25px; font-weight: bold; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; word-spacing: normal;">第七课：初探FC与实现第二种调试方式</span><br>
+            </p>
+            <h1 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 25px;"><a
+                href="https://github.com/BetaSu/big-react/commit/ad6a6e520e4cbf7ac694a33cc0ba5a4b1d444250"
+                style="font-size: 16px; word-spacing: 2px; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">本节课代码地址</a>
+            </h1>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">FunctionComponent</code>需要考虑的问题：
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  如何支持<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">FC</code>？
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  如何组织<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Hooks</code>？（下一节课讲解）
+                </section>
+              </li>
+            </ul>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">如何支持FC？</span><span
+                class="suffix"></span></h2>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">FC</code>的工作同样植根于：
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  beginWork</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  completeWork</section>
+              </li>
+            </ul>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">第二种调试方式</span><span
+                class="suffix"></span></h2>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              采用<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">vite</code>的实时调试，他的好处是<strong
+                style="color: #916dd5; font-weight: bold;">「实时看到源码运行效果」</strong>。</p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              创建<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">vite</code>项目：
+            </p>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">pnpm&nbsp;create&nbsp;vite<br></code></pre>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              使用<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">vite</code>而不是<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">webpack</code>作为<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">demo</code>调试的原因：
+            </p>
+            <ol style="list-style-type: decimal;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  在开发阶段编译速度快于<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">webpack</code>
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  <code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">vite</code>的插件体系与<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">rollup</code>兼容
+                </section>
+              </li>
+            </ol>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <a href="https://vitejs.dev/config/dep-optimization-options.html#optimizedeps-force"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">参考资料：vite强制预编译</a>
+            </p>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">课外资料</span><span
+                class="suffix"></span></h2>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              如果<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">vite</code>热更新失效，可能是因为<strong
+                style="color: #916dd5; font-weight: bold;">「书写的React组件不符合规范」</strong>，可以引入<a
+                href="https://github.com/ArnaudBarre/eslint-plugin-react-refresh"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">eslint-plugin-react-refresh</a>插件检查不符合规范的地方。
+            </p>
+          </section>
+          <p><br></p>
+        </div>
+      </div>
+    </div><!---->
+  </div>
+</body>
+
+</html>

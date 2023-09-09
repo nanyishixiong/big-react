@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      width: 60%;
+      margin: 0 auto;
+    }
+
+    img {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <section id="nice"
+    style="padding-right: 10px; padding-left: 10px; word-break: break-word; line-height: 1.25; letter-spacing: 2px; background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%); background-size: 20px 20px; background-position: center center; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif;">
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      课前须知：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <p
+            style="margin-top: 10px; margin-bottom: 10px; font-size: 16px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; word-spacing: 2px;">
+            为了更好的学习体验，请购课后加卡颂微信（kasong555），发送<a
+              href="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lbfu8mqw0ssm.jpeg"
+              style="color: rgb(145, 109, 213); background-color: initial; outline: none; cursor: pointer; transition: color 0.3s ease 0s; touch-action: manipulation; font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">课程订单号</a>，拉你进专属学习群
+          </p>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <p
+            style="margin-top: 10px; margin-bottom: 10px; font-size: 16px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; word-spacing: 2px;">
+            参与<a href="https://wj.qq.com/s2/11444184/b3e4/"
+              style="color: rgb(145, 109, 213); background-color: initial; outline: none; cursor: pointer; transition: color 0.3s ease 0s; touch-action: manipulation; font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">2个月通关React挑战</a>，返现金
+          </p>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <p
+            style="margin-top: 10px; margin-bottom: 10px; font-size: 16px; padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; word-spacing: 2px;">
+            为了提高PC端观看体验，请安装<a href="https://github.com/BetaSu/kasong-school"
+              style="color: rgb(145, 109, 213); background-color: initial; outline: none; cursor: pointer; transition: color 0.3s ease 0s; touch-action: manipulation; font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">卡颂课堂chrome插件</a>
+          </p>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <p
+            style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+            <a href="https://github.com/BetaSu/big-react/commit/a043abecb7546eea5f678cf5f796e08c82ad2223"
+              style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">本节课代码地址</a>
+          </p>
+        </section>
+      </li>
+    </ul>
+    <h1 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 25px;"><span class="prefix"
+        style="display: none;"></span><span class="content"
+        style="display: inline-block; color: rgb(119, 48, 152);">第十一课 实现事件系统</span><span class="suffix"></span></h1>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      事件系统本质上植根于浏览器事件模型，所以他隶属于<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactDOM</code>，在实现时要做到对<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Reconciler</code>
+      0侵入。</p>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      实现事件系统需要考虑：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          模拟实现浏览器事件捕获、冒泡流程</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          实现合成事件对象</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          方便后续扩展</section>
+      </li>
+    </ul>
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">实现ReactDOM与Reconciler对接</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      将事件回调保存在DOM中，通过以下两个时机对接：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          创建DOM时</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          更新属性时</section>
+      </li>
+    </ul>
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">模拟实现浏览器事件流程</span>
+    </h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      <img
+        src="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lbupas2e0q22.png"
+        alt="下载.png" width="100%" height="auto" title="下载.png" /></p>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      需要注意的点：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          基于事件对象实现合成事件，以满足自定义需求（比如阻止事件传递）</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          方便后续扩展优先级机制</section>
+      </li>
+    </ul>
+  </section>
+  <p><br /></p>
+</body>
+
+</html>

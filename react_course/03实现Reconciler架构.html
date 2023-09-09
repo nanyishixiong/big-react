@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      width: 60%;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div data-v-70c3a052="" data-v-7d9b0470="" class="content_detail_box" data-v-62a39206="">
+    <div data-v-70c3a052="" id="xePreview" class="xe-preview">
+      <div class="xe-preview__container">
+        <div oncontextmenu="return true" class="xe-preview__content">
+          <section id="nice"
+            style="padding-right: 10px; padding-left: 10px; word-break: break-word; line-height: 1.25; letter-spacing: 2px; background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%); background-size: 20px 20px; background-position: center center; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif;">
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+              <span
+                style="color: rgb(119, 48, 152); font-size: 25px; font-weight: bold; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; text-decoration-line: unset; word-spacing: normal;">第三课：实现Reconciler架构</span>
+            </p>
+            <h1 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 25px;"><span
+                class="suffix"></span></h1>
+            <p><a href="https://github.com/BetaSu/big-react/commit/2783c639dee37139eeff9d0d7ba6133df6db9a0e"
+                style="word-spacing: 2px; font-style: unset; font-variant-ligatures: unset; font-variant-caps: unset; color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">本节课代码地址</a>
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">reconciler</code>是<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">React</code>核心逻辑所在的模块，中文名叫<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">协调器</code>。协调（reconcile）就是<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">diff</code>算法的意思。
+            </p>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">reconciler有什么用？</span><span
+                class="suffix"></span>
+            </h2>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">jQuery</code>工作原理（过程驱动）：
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <img
+                data-src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lb1kiitv03b2.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1"
+                alt="91d0984e-6963-46d1-b91f-62687fd48f84.png" width="100%" height="auto"
+                title="91d0984e-6963-46d1-b91f-62687fd48f84.png"
+                src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lb1kiitv03b2.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1">
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              前端框架结构与工作原理（状态驱动）：</p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <img data-src="" alt="frame.png" width="100%" height="auto" title="frame.png"
+                style="font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif; letter-spacing: 2px; white-space: normal; word-spacing: 2px;"
+                src="./source/lb1kiitv0j3k.png">
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  消费JSX</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  没有编译优化（Vue Solid 有编译优化）</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  纯运行时的前端框架</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  开放通用API供不同宿主环境使用</section>
+              </li>
+            </ul>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">核心模块消费JSX的过程</span><span
+                class="suffix"></span>
+            </h2>
+            <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="border-bottom: 2px solid #d89cf6;">核心模块操作的数据结构是？</span><span class="suffix"
+                style="display: none;"></span>
+            </h3>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              当前已知的数据结构：<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactElement</code>（<a
+                href="https://babeljs.io/repl#?browsers=defaults&amp;build=&amp;builtIns=false&amp;corejs=3.6&amp;spec=false&amp;loose=false&amp;code_lz=DwEwlgbgfAjATAZmAenNIA&amp;debug=false&amp;forceAllTransforms=false&amp;shippedProposals=false&amp;circleciRepo=&amp;evaluate=false&amp;fileSize=false&amp;timeTravel=false&amp;sourceType=module&amp;lineWrap=true&amp;presets=react%2Cstage-2&amp;prettier=false&amp;targets=&amp;version=7.19.5&amp;externalPlugins=&amp;assumptions=%7B%7D"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">JSX转换
+                playground</a>）</p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactElement</code>如果作为核心模块操作的数据结构，存在的问题：
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  无法表达节点之间的关系</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  字段有限，不好拓展（比如：无法表达状态）</section>
+              </li>
+            </ul>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              所以，需要一种新的数据结构，他的特点：</p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  介于<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactElement</code>与真实UI节点之间
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  能够表达节点之间的关系</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  方便拓展（不仅作为数据存储单元，也能作为工作单元）</section>
+              </li>
+            </ul>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              这就是<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">FiberNode</code>（虚拟DOM在React中的实现）
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              当前我们了解的节点类型：</p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  JSX</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  ReactElement</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  FiberNode</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  DOMElement</section>
+              </li>
+            </ul>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">reconciler的工作方式</span><span
+                class="suffix"></span>
+            </h2>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              对于同一个节点，比较其<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactElement</code>与<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">fiberNode</code>，生成<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">子fiberNode</code>。并根据比较的结果生成不同标记（插入、删除、移动......），对应不同宿主环境API的执行。
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <img
+                data-src="https://wechatapppro-1252524126.cdn.xiaoeknow.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lb1kiitv0gin.png?imageView2/2/q/80%7CimageMogr2/ignore-error/1"
+                alt="33.png" width="100%" height="auto" title="33.png"
+                style="font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif; letter-spacing: 2px; white-space: normal; word-spacing: 2px;"
+                src="./source/lb1kiitv0gin.png">
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              比如，挂载<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">&lt;div&gt;&lt;/div&gt;</code>：
+            </p>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;React&nbsp;Element&nbsp;&lt;div&gt;&lt;/div&gt;</span><br>jsx(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"div"</span>)<br><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;对应fiberNode</span><br><span class="hljs-literal" style="color: #56b6c2; line-height: 26px;">null</span><br><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;生成子fiberNode</span><br><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;对应标记</span><br>Placement<br></code></pre>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              将<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">&lt;div&gt;&lt;/div&gt;</code>更新为<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">&lt;p&gt;&lt;/p&gt;</code>：
+            </p>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;React&nbsp;Element&nbsp;&lt;p&gt;&lt;/p&gt;</span><br>jsx(<span class="hljs-string" style="color: #98c379; line-height: 26px;">"p"</span>)<br><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;对应fiberNode</span><br>FiberNode&nbsp;{<span class="hljs-attr" style="color: #d19a66; line-height: 26px;">type</span>:&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">'div'</span>}<br><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;生成子fiberNode</span><br><span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;对应标记</span><br>Deletion&nbsp;Placement<br></code></pre>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              当所有<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactElement</code>比较完后，会生成一棵<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">fiberNode树</code>，一共会存在两棵<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">fiberNode树</code>：
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  current：与视图中真实UI对应的<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">fiberNode树</code>
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  workInProgress：触发更新后，正在<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">reconciler</code>中计算的<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">fiberNode树</code>
+                </section>
+              </li>
+            </ul>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <a href="https://blog.csdn.net/wwwlyj123321/article/details/126447825"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">双缓冲技术介绍</a>
+            </p>
+            <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;">
+              <span class="prefix" style="display: none;"></span><span class="content"
+                style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">JSX消费的顺序</span><span
+                class="suffix"></span>
+            </h2>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              <a href="https://houbb.github.io/2020/01/23/data-struct-learn-08-dfs-bfs"
+                style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">DFS
+                深度优先遍历与 BFS 广度优先遍历详解</a>
+            </p>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              以DFS（深度优先遍历）的顺序遍历<code
+                style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">ReactElement</code>，这意味着：
+            </p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  如果有子节点，遍历子节点</section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  如果没有子节点，遍历兄弟节点
+                  例子：</section>
+              </li>
+            </ul>
+            <pre class="custom"
+              style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">Card</span>&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">h3</span>&gt;</span>你好<span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">h3</span>&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">p</span>&gt;</span>Big-React<span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">p</span>&gt;</span><br><span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">Card</span>&gt;</span><br></code></pre>
+            <p
+              style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+              这是个递归的过程，存在递、归两个阶段：</p>
+            <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  递：对应<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">beginWork</code>
+                </section>
+              </li>
+              <li>
+                <section
+                  style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+                  归：对应<code
+                    style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">completeWork</code>
+                </section>
+              </li>
+            </ul>
+          </section>
+          <p><br></p>
+        </div>
+      </div>
+    </div><!---->
+  </div>
+
+</body>
+
+</html>

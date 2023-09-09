@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    body {
+      width: 60%;
+      margin: 0 auto;
+    }
+
+    img {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <section id="nice"
+    style="padding-right: 10px; padding-left: 10px; word-break: break-word; line-height: 1.25; letter-spacing: 2px; background-size: 20px 20px; background-position: center center; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, &quot;PingFang SC&quot;, Cambria, Cochin, Georgia, Times, &quot;Times New Roman&quot;, serif;">
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      课前须知：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <p
+            style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+            为了更好的学习体验，请购课后加卡颂微信（kasong555），发送课程购买截图，拉你进专属学习群</p>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <p
+            style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+            参与<a href="https://wj.qq.com/s2/11444184/b3e4/"
+              style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">2个月通关React挑战</a>，返现金
+          </p>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <p
+            style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: black; margin-top: 10px; margin-bottom: 10px; font-size: 16px; word-spacing: 2px;">
+            <a href="https://github.com/BetaSu/big-react/commit/0de1b018924086224c805edde649de6a9a786951"
+              style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">本节课代码地址</a>
+          </p>
+        </section>
+      </li>
+    </ul>
+    <h1 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 25px;"><span class="prefix"
+        style="display: none;"></span><span class="content"
+        style="display: inline-block; color: rgb(119, 48, 152);">第十五课：实现useEffect</span><span class="suffix"></span>
+    </h1>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      实现<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">useEffect</code>需要考虑的：
+    </p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">effect</code>数据结构
+        </section>
+      </li>
+    </ul><img
+      src="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lcwzfvex0vnp.png"
+      alt=""
+      style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;" />
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">effect</code>的工作流程如何接入现有流程
+        </section>
+      </li>
+    </ul>
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">effect数据结构</span><span
+        class="suffix"></span></h2>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      什么是<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">effect</code>？
+    </p>
+    <pre class="custom"
+      style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">function</span>&nbsp;<span class="hljs-title" style="color: #61aeee; line-height: 26px;">App</span>(<span class="hljs-params" style="line-height: 26px;"></span>)&nbsp;</span>{<br/>&nbsp;&nbsp;&nbsp;&nbsp;useEffect(<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;create</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">return</span>&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;destroy</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;&nbsp;&nbsp;},&nbsp;[xxx,&nbsp;yyy])<br/>&nbsp;&nbsp;&nbsp;&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;useLayoutEffect(<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;{})<br/>&nbsp;&nbsp;&nbsp;&nbsp;useEffect(<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;{},&nbsp;[])<br/>&nbsp;&nbsp;&nbsp;&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #5c6370; font-style: italic; line-height: 26px;">//&nbsp;...</span><br/>}<br/></code></pre>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      数据结构需要考虑：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          不同<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">effect</code>可以共用同一个机制
+        </section>
+      </li>
+      <ul style="list-style-type: square;padding-left:30px;" class=" list-paddingleft-2">
+        <li>
+          <section
+            style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;"><code
+              style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">useEffect</code>
+          </section>
+        </li>
+        <li>
+          <section
+            style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;"><code
+              style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">useLayoutEffect</code>
+          </section>
+        </li>
+        <li>
+          <section
+            style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;"><code
+              style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">useInsertionEffect</code>
+          </section>
+        </li>
+      </ul>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          需要能保存依赖</section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          需要能保存<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">create</code>回调
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          需要能保存<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">destroy</code>回调
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          需要能够区分是否需要触发<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">create</code>回调
+        </section>
+      </li>
+      <ul style="list-style-type: square;padding-left:30px;" class=" list-paddingleft-2">
+        <li>
+          <section
+            style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;"><code
+              style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">mount</code>时
+          </section>
+        </li>
+        <li>
+          <section
+            style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">依赖变化时
+          </section>
+        </li>
+      </ul>
+    </ul>
+    <pre class="custom"
+      style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">const</span>&nbsp;effect&nbsp;=&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;tag,<br/>&nbsp;&nbsp;&nbsp;&nbsp;create,<br/>&nbsp;&nbsp;&nbsp;&nbsp;destroy,<br/>&nbsp;&nbsp;&nbsp;&nbsp;deps,<br/>&nbsp;&nbsp;&nbsp;&nbsp;next<br/>}<br/></code></pre>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      注意区分本节课新增的3个<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">flag</code>：
+    </p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          对于<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">fiber</code>，新增<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">PassiveEffect</code>，代表<strong
+            style="color: #916dd5; font-weight: bold;">「当前fiber本次更新存在副作用」</strong></section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          对于<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">effect hook</code>，<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">Passive</code>代表<strong
+            style="color: #916dd5; font-weight: bold;">「useEffect对应effect」</strong></section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          对于<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">effect hook</code>，<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">HookHasEffect</code>代表<strong
+            style="color: #916dd5; font-weight: bold;">「当前effect本次更新存在副作用」</strong></section>
+      </li>
+    </ul><img
+      src="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lcwzfvex09tw.png"
+      alt=""
+      style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;" />
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          为了方便使用，最好和其他<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">effect</code>连接成链表
+        </section>
+      </li>
+    </ul>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      <code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">render</code>时重置<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">effect</code>链表
+    </p><img
+      src="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lcwzfvex0lwm.png"
+      alt=""
+      style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;" />
+    <h2 style="font-weight: bold; font-size: 22px; margin-top: 20px; margin-right: 10px; margin-bottom: 0px;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="font-size: 18px; display: inline-block; padding-left: 10px; border-left: 5px solid rgb(145, 109, 213);">effect的工作流程</span><span
+        class="suffix"></span></h2><img
+      src="https://wechatapppro-1252524126.file.myqcloud.com/appjiz2zqrn2142/image/b_u_622f2474a891b_tuQ1ZmhR/lcwzfvex019k.png"
+      alt=""
+      style="border-radius: 6px; display: block; margin: 20px auto; object-fit: contain; box-shadow: rgb(153, 153, 153) 2px 4px 7px;" />
+    <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="border-bottom: 2px solid #d89cf6;">调度副作用</span><span class="suffix" style="display: none;"></span></h3>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      调度需要使用<a href="https://www.npmjs.com/package/scheduler"
+        style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">Scheduler</a>（调度器），调度器也属于<a
+        href="https://github.com/facebook/react/tree/main/packages/scheduler"
+        style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">React项目下的模块</a>。在本课程中，我们不会实现调度器，但会教如何使用它。
+    </p>
+    <pre class="custom"
+      style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">pnpm&nbsp;i&nbsp;-w&nbsp;scheduler&nbsp;<br/>pnpm&nbsp;i&nbsp;-D&nbsp;-w&nbsp;@types/scheduler<br/></code></pre>
+    <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="border-bottom: 2px solid #d89cf6;">收集回调</span><span class="suffix" style="display: none;"></span></h3>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      回调包括两类：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">create</code>回调
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">destroy</code>回调
+        </section>
+      </li>
+    </ul>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      <a href="https://codesandbox.io/s/wonderful-davinci-cduo7y?file=/src/App.js:276-336"
+        style="color: rgb(145, 109, 213); font-weight: bolder; border-bottom: 1px solid rgb(145, 109, 213);">在线Demo地址</a>
+    </p>
+    <pre class="custom"
+      style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;"><span style="display: block; background: url(https://files.mdnice.com/user/3441/876cad08-0422-409d-bb5a-08afec5da8ee.svg); height: 30px; width: 100%; background-size: 40px; background-repeat: no-repeat; background-color: #282c34; margin-bottom: -7px; border-radius: 5px; background-position: 10px 10px;"></span><code class="hljs" style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">function</span>&nbsp;<span class="hljs-title" style="color: #61aeee; line-height: 26px;">App</span>(<span class="hljs-params" style="line-height: 26px;"></span>)&nbsp;</span>{<br/>&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">const</span>&nbsp;[num,&nbsp;updateNum]&nbsp;=&nbsp;useState(<span class="hljs-number" style="color: #d19a66; line-height: 26px;">0</span>);<br/>&nbsp;&nbsp;useEffect(<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-built_in" style="color: #e6c07b; line-height: 26px;">console</span>.log(<span class="hljs-string" style="color: #98c379; line-height: 26px;">&#39;App&nbsp;mount&#39;</span>);<br/>&nbsp;&nbsp;},&nbsp;[]);<br/><br/>&nbsp;&nbsp;useEffect(<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-built_in" style="color: #e6c07b; line-height: 26px;">console</span>.log(<span class="hljs-string" style="color: #98c379; line-height: 26px;">&#39;num&nbsp;change&nbsp;create&#39;</span>,&nbsp;num);<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">return</span>&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-built_in" style="color: #e6c07b; line-height: 26px;">console</span>.log(<span class="hljs-string" style="color: #98c379; line-height: 26px;">&#39;num&nbsp;change&nbsp;destroy&#39;</span>,&nbsp;num);<br/>&nbsp;&nbsp;&nbsp;&nbsp;};<br/>&nbsp;&nbsp;},&nbsp;[num]);<br/><br/>&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">return</span>&nbsp;(<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class="xml" style="line-height: 26px;"><span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">div</span>&nbsp;<span class="hljs-attr" style="color: #d19a66; line-height: 26px;">onClick</span>=<span class="hljs-string" style="color: #98c379; line-height: 26px;">{()</span>&nbsp;=&gt;</span>&nbsp;updateNum(num&nbsp;+&nbsp;1)}&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{num&nbsp;===&nbsp;0&nbsp;?&nbsp;<span class="hljs-tag" style="line-height: 26px;">&lt;<span class="hljs-name" style="color: #e06c75; line-height: 26px;">Child</span>&nbsp;/&gt;</span>&nbsp;:&nbsp;&#39;noop&#39;}<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-tag" style="line-height: 26px;">&lt;/<span class="hljs-name" style="color: #e06c75; line-height: 26px;">div</span>&gt;</span></span><br/>&nbsp;&nbsp;);<br/>}<br/><br/><span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">function</span>&nbsp;<span class="hljs-title" style="color: #61aeee; line-height: 26px;">Child</span>(<span class="hljs-params" style="line-height: 26px;"></span>)&nbsp;</span>{<br/>&nbsp;&nbsp;useEffect(<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-built_in" style="color: #e6c07b; line-height: 26px;">console</span>.log(<span class="hljs-string" style="color: #98c379; line-height: 26px;">&#39;Child&nbsp;mount&#39;</span>);<br/>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">return</span>&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;=&gt;</span>&nbsp;<span class="hljs-built_in" style="color: #e6c07b; line-height: 26px;">console</span>.log(<span class="hljs-string" style="color: #98c379; line-height: 26px;">&#39;Child&nbsp;unmount&#39;</span>);<br/>&nbsp;&nbsp;},&nbsp;[]);<br/><br/>&nbsp;&nbsp;<span class="hljs-keyword" style="color: #c678dd; line-height: 26px;">return</span>&nbsp;<span class="hljs-string" style="color: #98c379; line-height: 26px;">&#39;i&nbsp;am&nbsp;child&#39;</span>;<br/>}<br/></code></pre>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      这意味着我们需要收集两类回调：</p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">unmout</code>时执行的<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">destroy</code>回调
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">update</code>时执行的<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">create</code>回调
+        </section>
+      </li>
+    </ul>
+    <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;"><span
+        class="prefix" style="display: none;"></span><span class="content"
+        style="border-bottom: 2px solid #d89cf6;">执行副作用</span><span class="suffix" style="display: none;"></span></h3>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      本次更新的任何<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">create</code>回调都必须在所有上一次更新的<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">destroy</code>回调执行完后再执行。
+    </p>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      整体执行流程包括：</p>
+    <ol style="list-style-type: decimal;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          遍历<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">effect</code>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          首先触发所有<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">unmount effect</code>，且对于某个<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">fiber</code>，如果触发了<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">unmount destroy</code>，本次更新不会再触发<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">update create</code>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          触发所有上次更新的<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">destroy</code>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          触发所有这次更新的<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">create</code>
+        </section>
+      </li>
+    </ol>
+    <p
+      style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; margin-top: 10px; margin-bottom: 10px; word-spacing: 2px;">
+      <code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">mount</code>、<code
+        style="font-size: 14px; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">update</code>时的区别
+    </p>
+    <ul style="list-style-type: circle;padding-left:30px;" class=" list-paddingleft-2">
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">mount</code>时：一定标记<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">PassiveEffect</code>
+        </section>
+      </li>
+      <li>
+        <section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: rgb(1, 1, 1); font-size: 14px;">
+          <code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">update</code>时：<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">deps</code>变化时标记<code
+            style="padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; font-family: &quot;Operator Mono&quot;, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: rgb(145, 109, 213); font-weight: bolder; background: none;">PassiveEffect</code>
+        </section>
+      </li>
+    </ul>
+  </section>
+  <p><br /></p>
+
+  <body>
+
+</html>
