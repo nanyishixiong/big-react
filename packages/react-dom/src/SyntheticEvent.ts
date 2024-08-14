@@ -60,6 +60,7 @@ function createSyntheticEvent(e: Event) {
 }
 
 function dispatchEvent(container: Container, eventType: string, e: Event) {
+	// 事件委托在容器上, 通过 e.target 直接取到触发事件的节点
 	const targetElement = e.target;
 
 	if (targetElement === null) {
@@ -76,7 +77,7 @@ function dispatchEvent(container: Container, eventType: string, e: Event) {
 	// 3. 遍历capture 捕获阶段的事件
 	triggerEventFlow(capture, se);
 
-	// 如果标记为阻止冒泡了就不应该执行遍历冒泡事件
+	// 如果标记为阻止冒泡了就不应该执行遍历冒泡事件，捕获阶段也可能标记阻止冒泡
 	if (!se.__stopPropagation) {
 		// 4. 遍历bubble 冒泡阶段的事件
 		triggerEventFlow(bubble, se);

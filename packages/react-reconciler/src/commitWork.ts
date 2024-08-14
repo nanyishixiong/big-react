@@ -157,7 +157,10 @@ export const commitLayoutEffects = commitEffects(
 	commitLayoutEffectsOnFiber
 );
 
-// 收集effect
+/**
+ * 收集effect，在commit阶段将所有有副作用的Effect（副作用指删除或更新或新建），保存到fiber树根节点，
+ * commit结束之后，将所有副作用处理，先执行所有删除节点的effect销毁函数，再执行创建函数。
+ */
 function commitPassiveEffect(
 	fiber: FiberNode,
 	root: FiberRootNode,
