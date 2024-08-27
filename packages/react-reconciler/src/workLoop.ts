@@ -33,6 +33,7 @@ import {
 	unstable_cancelCallback
 } from 'scheduler';
 import { HookHasEffect, Passive } from './hookEffectTags';
+import { getSuspendedThenable, SuspenseException } from './thenable';
 
 let workInProgress: FiberNode | null = null;
 let wipRootRenderLane: Lane = NoLane;
@@ -42,6 +43,12 @@ type RootExitStatus = number;
 const RootInComplete = 1; // 中断执行
 const RootCompleted = 2; // 执行完成
 // TODO 执行过程报错
+
+type SuspendedReason = typeof NotSuspended | typeof SuspendedOnData;
+const NotSuspended = 0;
+const SuspendedOnData = 1;
+let wipSuspendedReason: SuspendedReason = NotSuspended;
+let wipThrownValue: any = null;
 
 // 初始化
 function prepareFreshStack(root: FiberRootNode, lane: Lane) {
@@ -221,6 +228,12 @@ function renderRoot(
 
 	do {
 		try {
+			if (wipSuspendedReason !== NotSuspended && workInProgress !== null) {
+				const thownvalue = wipThrownValue;
+				wipSuspendedReason = NotSuspended;
+				wipThrownValue = null;
+				// unwind
+			}
 			// 进入工作循环
 			shouldTimeSlice ? workLoopConcurrent() : workLoopSync();
 			break;
@@ -228,7 +241,7 @@ function renderRoot(
 			if (__DEV__) {
 				console.warn('workLoop出现错误', e);
 			}
-			workInProgress = null;
+			handleThrow(root, e);
 		}
 	} while (true);
 
@@ -242,6 +255,26 @@ function renderRoot(
 	}
 	// TODO 报错
 	return RootCompleted;
+}
+
+function throwAndUnwindWorkLoop(
+	root: FiberRootNode,
+	unitOfWork: FiberNode,
+	throwValue: any,
+	lane: Lane
+) {
+	// 重置FC全局变量
+	// 请求返回后重新触发更新
+	// unwind
+}
+
+function handleThrow(root: FiberRootNode, throwValue: any) {
+	// Error Boundary
+	if (throwValue === SuspenseException) {
+		throwValue = getSuspendedThenable();
+		wipSuspendedReason = SuspendedOnData;
+	}
+	wipThrownValue = throwValue;
 }
 
 function commitRoot(root: FiberRootNode) {

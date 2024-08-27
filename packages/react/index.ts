@@ -2,6 +2,11 @@ import { Dispatcher, resolveDispatcher } from './src/currentDispatcher';
 import { jsx, jsxDEV, isValidElement as isValidElementFn } from './src/jsx';
 import currentDispatcher from './src/currentDispatcher';
 import currentBatchConfig from './src/currentBatchConfig';
+import { Usable } from 'shared/ReactTypes';
+export {
+	REACT_FRAGMENT_TYPE as Fragment,
+	REACT_SUSPENSE_TYPE as Suspense
+} from 'shared/ReactSymbols';
 export { createContext } from './src/context';
 
 export const useState: Dispatcher['useState'] = (initialState: any) => {
@@ -37,6 +42,11 @@ export const useMemo: Dispatcher['useMemo'] = (nextCreate, deps) => {
 export const useContext: Dispatcher['useContext'] = (context) => {
 	const dispatcher = resolveDispatcher();
 	return dispatcher.useContext(context);
+};
+
+export const use: Dispatcher['use'] = <T>(useable: Usable<T>) => {
+	const dispatcher = resolveDispatcher();
+	return dispatcher.use(useable);
 };
 
 // 内部数据共享层
