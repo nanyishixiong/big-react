@@ -18,9 +18,10 @@ import {
 	Lane,
 	NoLane,
 	SyncLane,
-	getHighestPriorityLane,
+	getNextLane,
 	lanesToSchedulerPriority,
 	markRootFinished,
+	markRootSuspended,
 	mergeLanes
 } from './fiberLanes';
 import { HostRoot } from './workTags';
@@ -34,15 +35,22 @@ import {
 } from 'scheduler';
 import { HookHasEffect, Passive } from './hookEffectTags';
 import { getSuspendedThenable, SuspenseException } from './thenable';
+import { resetHookOnunwind } from './fiberHooks';
+import { throwException } from './fiberThrow';
+import { unwindWork } from './fiberUnwindWork';
 
 let workInProgress: FiberNode | null = null;
 let wipRootRenderLane: Lane = NoLane;
 let rootDoesHasPassiveEffects = false;
 
 type RootExitStatus = number;
+// 工作中状态
+const RootInProgress = 0;
 const RootInComplete = 1; // 中断执行
 const RootCompleted = 2; // 执行完成
-// TODO 执行过程报错
+// 由于挂起 当前是未完成状态，不用进入commit阶段
+const RootDidNotComplete = 3;
+let wipRootExitStatus: number = RootInProgress;
 
 type SuspendedReason = typeof NotSuspended | typeof SuspendedOnData;
 const NotSuspended = 0;
@@ -57,6 +65,10 @@ function prepareFreshStack(root: FiberRootNode, lane: Lane) {
 	// workInProgress 变成重新创建的根节点
 	workInProgress = createWorkInProgress(root.current, {});
 	wipRootRenderLane = lane;
+
+	wipRootExitStatus = RootInProgress;
+	wipSuspendedReason = NotSuspended;
+	wipThrownValue = null;
 }
 
 // 在Fiber中调度Update 每次触发更新都会调用
@@ -69,8 +81,8 @@ export function scheduleUpdateOnFiber(fiber: FiberNode, lane: Lane) {
 }
 
 // schedule阶段入口
-function ensureRootIsScheduled(root: FiberRootNode) {
-	const updateLane = getHighestPriorityLane(root.pendingLanes);
+export function ensureRootIsScheduled(root: FiberRootNode) {
+	const updateLane = getNextLane(root);
 	const existingCallback = root.callbackNode;
 
 	// 完成所有工作
@@ -123,7 +135,7 @@ function ensureRootIsScheduled(root: FiberRootNode) {
 }
 
 // 将本次更新的lane记录在FiberRootNode上
-function markRootUpdated(root: FiberRootNode, lane: Lane) {
+export function markRootUpdated(root: FiberRootNode, lane: Lane) {
 	root.pendingLanes = mergeLanes(root.pendingLanes, lane);
 }
 
@@ -155,7 +167,7 @@ function performConcurrentWorkOnRoot(
 			return null;
 		}
 	}
-	const lane = getHighestPriorityLane(root.pendingLanes);
+	const lane = getNextLane(root);
 	const curCallbackNode = root.callbackNode;
 	if (lane === NoLane) {
 		return null;
@@ -165,30 +177,40 @@ function performConcurrentWorkOnRoot(
 	const exitStatus = renderRoot(root, lane, !needSync);
 
 	ensureRootIsScheduled(root);
-	if (exitStatus === RootInComplete) {
-		// 中断
-		if (root.callbackNode !== curCallbackNode) {
-			// 以及开启更高优先级的调度 返回null让原有的任务不要再进行调度
-			return null;
-		}
-		return performConcurrentWorkOnRoot.bind(null, root);
-	}
-	if (exitStatus === RootCompleted) {
-		// 更新结束
-		const finishedWork = root.current.alternate;
-		root.finishedWork = finishedWork;
-		root.finishedLane = lane;
-		wipRootRenderLane = NoLane;
-		//  wip fiberNode树 树中的flags 执行DOM操作
-		commitRoot(root);
-	} else if (__DEV__) {
-		console.error('还未实现并发更新结束状态');
+
+	switch (exitStatus) {
+		case RootInComplete:
+			// 中断
+			if (root.callbackNode !== curCallbackNode) {
+				// 以及开启更高优先级的调度 返回null让原有的任务不要再进行调度
+				return null;
+			}
+			return performConcurrentWorkOnRoot.bind(null, root);
+		case RootCompleted:
+			// 更新结束
+			const finishedWork = root.current.alternate;
+			root.finishedWork = finishedWork;
+			root.finishedLane = lane;
+			wipRootRenderLane = NoLane;
+			//  wip fiberNode树 树中的flags 执行DOM操作
+			commitRoot(root);
+			break;
+		case RootDidNotComplete:
+			wipRootRenderLane = NoLane;
+			markRootSuspended(root, lane);
+			ensureRootIsScheduled(root);
+			break;
+		default:
+			if (__DEV__) {
+				console.error('还未实现并发更新结束状态');
+			}
+			break;
 	}
 }
 
 // 同步更新入口: 拿到fiberRootNode，再从根节点向下更新
 function performSyncWorkOnRoot(root: FiberRootNode) {
-	const nextLane = getHighestPriorityLane(root.pendingLanes);
+	const nextLane = getNextLane(root);
 
 	if (nextLane !== SyncLane) {
 		// 其他比SyncLane低的优先级
@@ -198,15 +220,26 @@ function performSyncWorkOnRoot(root: FiberRootNode) {
 	}
 
 	const exitStatus = renderRoot(root, nextLane, false);
-	if (exitStatus === RootCompleted) {
-		const finishedWork = root.current.alternate;
-		root.finishedWork = finishedWork;
-		root.finishedLane = nextLane;
-		wipRootRenderLane = NoLane;
-		//  wip fiberNode树 树中的flags 执行DOM操作
-		commitRoot(root);
-	} else if (__DEV__) {
-		console.error('还未实现同步更新结束状态');
+
+	switch (exitStatus) {
+		case RootCompleted:
+			const finishedWork = root.current.alternate;
+			root.finishedWork = finishedWork;
+			root.finishedLane = nextLane;
+			wipRootRenderLane = NoLane;
+			//  wip fiberNode树 树中的flags 执行DOM操作
+			commitRoot(root);
+			break;
+		case RootDidNotComplete:
+			wipRootRenderLane = NoLane;
+			markRootSuspended(root, nextLane);
+			ensureRootIsScheduled(root);
+			break;
+		default:
+			if (__DEV__) {
+				console.error('还未实现并发更新结束状态');
+			}
+			break;
 	}
 }
 
@@ -229,10 +262,10 @@ function renderRoot(
 	do {
 		try {
 			if (wipSuspendedReason !== NotSuspended && workInProgress !== null) {
-				const thownvalue = wipThrownValue;
+				const thrownValue = wipThrownValue;
 				wipSuspendedReason = NotSuspended;
 				wipThrownValue = null;
-				// unwind
+				throwAndUnwindWorkLoop(root, workInProgress, thrownValue, lane);
 			}
 			// 进入工作循环
 			shouldTimeSlice ? workLoopConcurrent() : workLoopSync();
@@ -244,6 +277,10 @@ function renderRoot(
 			handleThrow(root, e);
 		}
 	} while (true);
+
+	if (wipRootExitStatus !== RootInProgress) {
+		return wipRootExitStatus;
+	}
 
 	// 中断执行 || render阶段完成
 	if (shouldTimeSlice && workInProgress !== null) {
@@ -264,12 +301,36 @@ function throwAndUnwindWorkLoop(
 	lane: Lane
 ) {
 	// 重置FC全局变量
+	resetHookOnunwind();
 	// 请求返回后重新触发更新
+	throwException(root, throwValue, lane);
 	// unwind
+	unwindUnitOfWork(unitOfWork);
+}
+
+function unwindUnitOfWork(unitOfWork: FiberNode) {
+	let incompleteWork: FiberNode | null = unitOfWork;
+	do {
+		const next = unwindWork(incompleteWork);
+		if (next !== null) {
+			workInProgress = next;
+			return;
+		}
+
+		const returnFiber = incompleteWork.return as FiberNode;
+		if (returnFiber !== null) {
+			returnFiber.deleions = null;
+		}
+		incompleteWork = returnFiber;
+	} while (incompleteWork !== null);
+
+	// 使用了use 抛出了data 但是没有定义suspense
+	wipRootExitStatus = RootDidNotComplete;
+	workInProgress = null;
 }
 
 function handleThrow(root: FiberRootNode, throwValue: any) {
-	// Error Boundary
+	// TODO Error Boundary
 	if (throwValue === SuspenseException) {
 		throwValue = getSuspendedThenable();
 		wipSuspendedReason = SuspendedOnData;

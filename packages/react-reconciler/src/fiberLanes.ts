@@ -51,6 +51,9 @@ export function getHighestPriorityLane(lanes: Lanes): Lane {
  */
 export function markRootFinished(root: FiberRootNode, lane: Lane) {
 	root.pendingLanes &= ~lane;
+
+	root.suspendedLanes = NoLanes;
+	root.pendingLanes = NoLanes;
 }
 
 /**
@@ -89,4 +92,38 @@ export function schedulerPriorityToLane(schedulerPriority: number) {
 		return DefaultLane;
 	}
 	return NoLane;
+}
+
+// 标记挂起 将lane保存到suspendedLanes 将lane从pendingLanes中移除
+export function markRootSuspended(root: FiberRootNode, suspenedLanes: Lanes) {
+	root.suspendedLanes |= suspenedLanes;
+	root.pendingLanes &= ~suspenedLanes;
+}
+
+// 标记ping
+export function markRootPinged(root: FiberRootNode, pingedLanes: Lanes) {
+	root.pingedLanes |= root.suspendedLanes & pingedLanes;
+}
+
+export function getNextLane(root: FiberRootNode): Lane {
+	const pendingLanes = root.pendingLanes;
+
+	if (pendingLanes === NoLanes) {
+		return NoLane;
+	}
+
+	let nextLane = NoLane;
+
+	// pendingLanes 中没有被挂起的lane
+	const suspendedLanes = pendingLanes & ~root.suspendedLanes;
+	if (suspendedLanes !== NoLanes) {
+		nextLane = getHighestPriorityLane(suspendedLanes);
+	} else {
+		// 所有的lane都是被挂起的 但是可能有已经结束挂起的lane也就是pingedLane
+		const pingedLanes = pendingLanes & root.pingedLanes;
+		if (pingedLanes !== NoLanes) {
+			nextLane = getHighestPriorityLane(pingedLanes);
+		}
+	}
+	return nextLane;
 }

@@ -20,10 +20,22 @@ import {
 import { mountChildFibers, reconcileChildFibers } from './childFibers';
 import { renderWithHooks } from './fiberHooks';
 import { Lane } from './fiberLanes';
-import { ChildDeletion, Placement, Ref } from './fiberFlags';
+import {
+	ChildDeletion,
+	DidCapture,
+	Noflags,
+	Placement,
+	Ref
+} from './fiberFlags';
 import { pushProvider } from './fiberContext';
+import { pushSuspenceHandler } from './suspenseContext';
 // beginWork 递归中的向下递归阶段
-export const beginWork = (wip: FiberNode, renderLane: Lane) => {
+export const beginWork = (
+	wip: FiberNode,
+	renderLane: Lane
+): FiberNode | null => {
+	console.log('beginWork', wip);
+
 	// 比较，返回子fiberNode
 	switch (wip.tag) {
 		case HostRoot:
@@ -51,18 +63,28 @@ export const beginWork = (wip: FiberNode, renderLane: Lane) => {
 	return null;
 };
 
+function updateOffscreenComponent(wip: FiberNode, renderLane: Lane) {
+	const nextProps = wip.pendingProps;
+	const nextChildren = nextProps.children;
+	reconcileChildren(wip, nextChildren);
+	return wip.child;
+}
+
 function updateSuspenseComponent(wip: FiberNode, renderLane: Lane) {
 	const current = wip.alternate;
 	const nextProps = wip.pendingProps;
 
 	let showFallback = false;
-	const didSuspend = false;
+	const didSuspend = (wip.flags & DidCapture) !== Noflags;
+
 	if (didSuspend) {
 		showFallback = true;
+		wip.flags &= ~DidCapture;
 	}
 
 	const nextPrimaryChildren = nextProps.children;
 	const nextFallbackChildren = nextProps.fallback;
+	pushSuspenceHandler(wip);
 
 	if (current === null) {
 		// mount
@@ -75,20 +97,20 @@ function updateSuspenseComponent(wip: FiberNode, renderLane: Lane) {
 			);
 		} else {
 			// 正常
-			mountSuspensePrimaryChildren(wip, nextPrimaryChildren);
+			return mountSuspensePrimaryChildren(wip, nextPrimaryChildren);
 		}
 	} else {
 		// update
 		if (showFallback) {
 			// 挂起
-			updateSuspenseFallbackChildren(
+			return updateSuspenseFallbackChildren(
 				wip,
 				nextPrimaryChildren,
 				nextFallbackChildren
 			);
 		} else {
 			// 正常
-			updateSuspensePrimaryChildren(wip, nextPrimaryChildren);
+			return updateSuspensePrimaryChildren(wip, nextPrimaryChildren);
 		}
 	}
 }
@@ -197,13 +219,6 @@ function mountSuspenseFallbackChildren(
 	wip.child = primaryChildFragment;
 
 	return fallbackChildFragment;
-}
-
-function updateOffscreenComponent(wip: FiberNode, renderLane: Lane) {
-	const nextProps = wip.pendingProps;
-	const nextChildren = nextProps.children;
-	reconcileChildren(wip, nextChildren);
-	return wip.child;
 }
 
 function updateContextProvider(wip: FiberNode) {

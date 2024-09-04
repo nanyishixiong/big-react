@@ -18,9 +18,15 @@
 	},
 	"plugins": ["@typescript-eslint", "prettier"],
 	"rules": {
-		"prettier/prettier": "error",
+		"prettier/prettier": [
+			"error",
+			{
+				"endOfLine": "auto"
+			}
+		],
 		"no-case-declarations": "off",
 		"no-constant-condition": "off",
+		"no-inner-declarations": "off",
 		"@typescript-eslint/ban-ts-comment": "off",
 		"@typescript-eslint/no-explicit-any": "off"
 	}

@@ -1,4 +1,4 @@
-import { Props, Key, Ref, ReactElementType } from 'shared/ReactTypes';
+import { Props, Key, Ref, ReactElementType, Wakeable } from 'shared/ReactTypes';
 import {
 	ContextProvider,
 	Fragment,
@@ -75,13 +75,17 @@ export class FiberRootNode {
 	current: FiberNode;
 	finishedWork: FiberNode | null; // 保存整个更新流程完成的hostRootFiber
 	pendingLanes: Lanes; // 代表所有未被消费的lane的集合
-	suspendedLanes: Lanes;
-	pingedLanes: Lanes;
 	finishedLane: Lane; // 代表本次更新消费的lane
 	pendingPassiveEffects: PendingPassiveEffects; // 保存effect回调函数
 
 	callbackNode: CallbackNode | null; //
 	callbackPriority: Lane;
+
+	pingCache: WeakMap<Wakeable<any>, Set<Lane>> | null;
+	// 保存挂起的更新的lane
+	suspendedLanes: Lanes;
+	// 保存挂起之后重新苏醒的后调用ping的lane
+	pingedLanes: Lanes;
 
 	constructor(container: Container, hostFiberRoot: FiberNode) {
 		this.container = container;
@@ -99,6 +103,8 @@ export class FiberRootNode {
 
 		this.callbackNode = null;
 		this.callbackPriority = NoLane;
+
+		this.pingCache = null;
 	}
 }
 
