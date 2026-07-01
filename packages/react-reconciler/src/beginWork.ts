@@ -19,7 +19,7 @@ import {
 } from './workTags';
 import { mountChildFibers, reconcileChildFibers } from './childFibers';
 import { renderWithHooks } from './fiberHooks';
-import { Lane } from './fiberLanes';
+import { Lane, NoLanes, includeSomeLane } from './fiberLanes';
 import {
 	ChildDeletion,
 	DidCapture,
@@ -29,12 +29,60 @@ import {
 } from './fiberFlags';
 import { pushProvider } from './fiberContext';
 import { pushSuspenceHandler } from './suspenseContext';
+
+let didReceiveUpdate = false;
+
+export function markWorkInProgressReceivedUpdate() {
+	didReceiveUpdate = true;
+}
+
 // beginWork 递归中的向下递归阶段
 export const beginWork = (
 	wip: FiberNode,
 	renderLane: Lane
 ): FiberNode | null => {
-	console.log('beginWork', wip);
+	// bailout策略
+	const current = wip.alternate;
+
+	if (current !== null) {
+		const oldProps = current.memoizedProps;
+		const newProps = wip.pendingProps;
+
+		if (oldProps !== newProps || current.type !== wip.type) {
+			didReceiveUpdate = true;
+		} else {
+			// props和type都没变，检查该fiber是否有待处理的更新
+			const hasScheduledStateOrContext = includeSomeLane(
+				current.lanes,
+				renderLane
+			);
+			if (!hasScheduledStateOrContext) {
+				// 没有待处理的更新，可以bailout
+				didReceiveUpdate = false;
+
+				// 特殊处理：ContextProvider和SuspenseComponent需要维护栈
+				switch (wip.tag) {
+					case ContextProvider: {
+						const newValue = wip.pendingProps.value;
+						const context = wip.type._context;
+						pushProvider(context, newValue);
+						break;
+					}
+					case SuspenseComponent:
+						pushSuspenceHandler(wip);
+						break;
+				}
+
+				return bailoutOnAlreadyFinishedWork(wip, renderLane);
+			} else {
+				didReceiveUpdate = false;
+			}
+		}
+	} else {
+		didReceiveUpdate = false;
+	}
+
+	wip.lanes = NoLanes;
 
 	// 比较，返回子fiberNode
 	switch (wip.tag) {
@@ -49,7 +97,7 @@ export const beginWork = (
 		case Fragment:
 			return updateFragment(wip);
 		case ContextProvider:
-			return updateContextProvider(wip);
+			return updateContextProvider(wip, renderLane);
 		case SuspenseComponent:
 			return updateSuspenseComponent(wip, renderLane);
 		case OffscreenComponent:
@@ -62,6 +110,44 @@ export const beginWork = (
 	}
 	return null;
 };
+
+function bailoutOnAlreadyFinishedWork(
+	wip: FiberNode,
+	renderLane: Lane
+): FiberNode | null {
+	if (!includeSomeLane(wip.childLanes, renderLane)) {
+		// 子树也没有待处理的更新，跳过整棵子树
+		if (__DEV__) {
+			console.log('bailout整棵子树', wip);
+		}
+		return null;
+	}
+	// 当前fiber不需要更新，但子树中有更新，克隆children继续向下
+	cloneChildFibers(wip);
+	return wip.child;
+}
+
+function cloneChildFibers(wip: FiberNode): void {
+	if (wip.child === null) {
+		return;
+	}
+	let currentChild = wip.child;
+	let newChild = createWorkInProgress(currentChild, currentChild.pendingProps);
+	wip.child = newChild;
+	newChild.return = wip;
+
+	while (currentChild.sibling !== null) {
+		currentChild = currentChild.sibling;
+		const newSibling = createWorkInProgress(
+			currentChild,
+			currentChild.pendingProps
+		);
+		newChild.sibling = newSibling;
+		newSibling.return = wip;
+		newChild = newSibling;
+	}
+	newChild.sibling = null;
+}
 
 function updateOffscreenComponent(wip: FiberNode, renderLane: Lane) {
 	const nextProps = wip.pendingProps;
@@ -221,12 +307,26 @@ function mountSuspenseFallbackChildren(
 	return fallbackChildFragment;
 }
 
-function updateContextProvider(wip: FiberNode) {
+function updateContextProvider(wip: FiberNode, renderLane: Lane) {
 	const providerType = wip.type;
 	const context = providerType._context;
 	const newProps = wip.pendingProps;
+	const oldProps = wip.memoizedProps;
 
-	pushProvider(context, newProps.value);
+	const newValue = newProps.value;
+
+	pushProvider(context, newValue);
+
+	if (oldProps !== null) {
+		const oldValue = oldProps.value;
+		// context value没变，尝试bailout
+		if (
+			Object.is(oldValue, newValue) &&
+			oldProps.children === newProps.children
+		) {
+			return bailoutOnAlreadyFinishedWork(wip, renderLane);
+		}
+	}
 
 	const nextChildren = newProps.children;
 	reconcileChildren(wip, nextChildren);
@@ -241,6 +341,13 @@ function updateFragment(wip: FiberNode) {
 
 function updateFunctionComponent(wip: FiberNode, renderLane: Lane) {
 	const nextChildren = renderWithHooks(wip, renderLane);
+
+	const current = wip.alternate;
+	if (current !== null && !didReceiveUpdate) {
+		// state没有变化，bailout
+		return bailoutOnAlreadyFinishedWork(wip, renderLane);
+	}
+
 	reconcileChildren(wip, nextChildren);
 	return wip.child;
 }

@@ -23,6 +23,10 @@ export function mergeLanes(laneA: Lane, laneB: Lane): Lanes {
 	return laneA | laneB;
 }
 
+export function includeSomeLane(set: Lanes, subset: Lane): boolean {
+	return (set & subset) !== NoLanes;
+}
+
 export function requestUpdateLane() {
 	// transition lane
 	const isTransition = ReactCurrentBatchConfig.transition !== null;

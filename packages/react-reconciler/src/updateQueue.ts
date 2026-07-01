@@ -1,6 +1,13 @@
 import { Action } from 'shared/ReactTypes';
 import { Dispatch } from '../../react/src/currentDispatcher';
-import { Lane, NoLane, isSubsetOfLanes } from './fiberLanes';
+import {
+	Lane,
+	Lanes,
+	NoLane,
+	NoLanes,
+	isSubsetOfLanes,
+	mergeLanes
+} from './fiberLanes';
 
 export interface Update<State> {
 	action: Action<State>;
@@ -70,11 +77,13 @@ export const processUpdateQueue = <State>(
 	memoizedState: State; // 被修改后的state
 	baseState: State;
 	baseQueue: Update<State> | null;
+	remainingLanes: Lanes;
 } => {
 	const result: ReturnType<typeof processUpdateQueue<State>> = {
 		memoizedState: baseState,
 		baseState: baseState,
-		baseQueue: null
+		baseQueue: null,
+		remainingLanes: NoLanes
 	};
 
 	if (pendingUpdate !== null) {
@@ -86,11 +95,13 @@ export const processUpdateQueue = <State>(
 		let newBaseQueueFirst: Update<State> | null = null;
 		let newBaseQueueLast: Update<State> | null = null;
 		let newState = baseState;
+		let remainingLanes: Lanes = NoLanes;
 
 		do {
 			const updateLane = pending.lane;
 			if (!isSubsetOfLanes(renderLane, updateLane)) {
 				// 优先级不够 update被跳过
+				remainingLanes = mergeLanes(remainingLanes, updateLane);
 				const clone = createUpdate(pending.action, pending.lane);
 				// 是不是第一个被跳过的
 				if (newBaseQueueFirst === null) {
@@ -135,6 +146,7 @@ export const processUpdateQueue = <State>(
 		result.memoizedState = newState;
 		result.baseState = newBaseState;
 		result.baseQueue = newBaseQueueLast;
+		result.remainingLanes = remainingLanes;
 	}
 	return result;
 };

@@ -16,6 +16,7 @@ import {
 	SuspenseComponent
 } from './workTags';
 import { Noflags, Ref, Update, Visibility } from './fiberFlags';
+import { Lanes, NoLanes, mergeLanes } from './fiberLanes';
 import { updateFiberProps } from 'react-dom/src/SyntheticEvent';
 import { popProvider } from './fiberContext';
 import { popSuspenceHandler } from './suspenseContext';
@@ -143,18 +144,25 @@ function appendAllChildren(parent: Container, wip: FiberNode) {
 	}
 }
 
-// 将子fiberNode的flags冒泡到父fiberNode，从父节点可以知道子节点有没有需要增删改，有的话则向下递归遍历子树
+// 将子fiberNode的flags和childLanes冒泡到父fiberNode
 function bubbleProperties(wip: FiberNode) {
 	let subtreeFlags = Noflags;
+	let newChildLanes: Lanes = NoLanes;
 	let child = wip.child;
 
 	while (child !== null) {
 		subtreeFlags |= child.subtreeFlags;
 		subtreeFlags |= child.flags;
 
+		newChildLanes = mergeLanes(
+			newChildLanes,
+			mergeLanes(child.lanes, child.childLanes)
+		);
+
 		child.return = wip;
 		child = child.sibling;
 	}
 
 	wip.subtreeFlags |= subtreeFlags;
+	wip.childLanes = newChildLanes;
 }

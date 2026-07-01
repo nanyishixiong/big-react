@@ -74,7 +74,7 @@ function prepareFreshStack(root: FiberRootNode, lane: Lane) {
 // 在Fiber中调度Update 每次触发更新都会调用
 export function scheduleUpdateOnFiber(fiber: FiberNode, lane: Lane) {
 	// fiberRootNode
-	const root = markUpdateFromFiberToRoot(fiber);
+	const root = markUpdateFromFiberToRoot(fiber, lane);
 	markRootUpdated(root, lane);
 	//  调度功能
 	ensureRootIsScheduled(root);
@@ -139,11 +139,25 @@ export function markRootUpdated(root: FiberRootNode, lane: Lane) {
 	root.pendingLanes = mergeLanes(root.pendingLanes, lane);
 }
 
-// 从更新节点回溯到根节点fiberRootNode
-function markUpdateFromFiberToRoot(fiber: FiberNode) {
+// 从更新节点回溯到根节点fiberRootNode，同时向上冒泡childLanes
+function markUpdateFromFiberToRoot(fiber: FiberNode, lane: Lane) {
 	let node = fiber;
 	let parent = node.return;
+
+	// 标记源fiber的lanes
+	node.lanes = mergeLanes(node.lanes, lane);
+	const alternate = node.alternate;
+	if (alternate) {
+		alternate.lanes = mergeLanes(alternate.lanes, lane);
+	}
+
+	// 向上冒泡childLanes
 	while (parent !== null) {
+		parent.childLanes = mergeLanes(parent.childLanes, lane);
+		const parentAlternate = parent.alternate;
+		if (parentAlternate) {
+			parentAlternate.childLanes = mergeLanes(parentAlternate.childLanes, lane);
+		}
 		node = parent;
 		parent = node.return;
 	}

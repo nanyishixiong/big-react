@@ -12,7 +12,8 @@ import {
 } from './updateQueue';
 import { Action, ReactContext, Thenable, Usable } from 'shared/ReactTypes';
 import { scheduleUpdateOnFiber } from './workLoop';
-import { Lane, NoLane, requestUpdateLane } from './fiberLanes';
+import { Lane, NoLane, mergeLanes, requestUpdateLane } from './fiberLanes';
+import { markWorkInProgressReceivedUpdate } from './beginWork';
 import { Flags, PassiveEffect } from './fiberFlags';
 import { HookHasEffect, Passive } from './hookEffectTags';
 import { REACT_CONTEXT_TYPE } from 'shared/ReactSymbols';
@@ -316,14 +317,26 @@ function updateState<State>(): [State, Dispatch<State>] {
 	}
 
 	if (baseQueue !== null) {
+		const prevState = hook.memoizedState;
 		const {
 			memoizedState,
 			baseQueue: newBaseQueue,
-			baseState: newBaseState
+			baseState: newBaseState,
+			remainingLanes
 		} = processUpdateQueue(baseState, baseQueue, renderLane);
 		hook.memoizedState = memoizedState;
 		hook.baseState = newBaseState;
 		hook.baseQueue = newBaseQueue;
+
+		if (!Object.is(prevState, memoizedState)) {
+			markWorkInProgressReceivedUpdate();
+		}
+
+		// 被跳过的update的lane需要重新标记到fiber上
+		if (remainingLanes !== NoLane) {
+			const fiber = currentlyRenderingFiber as FiberNode;
+			fiber.lanes = mergeLanes(fiber.lanes, remainingLanes);
+		}
 	}
 
 	return [hook.memoizedState, queue.dispatch as Dispatch<State>];
