@@ -19,6 +19,11 @@ export const useEffect: Dispatcher['useEffect'] = (create, deps) => {
 	return dispatcher.useEffect(create, deps);
 };
 
+export const useLayoutEffect: Dispatcher['useLayoutEffect'] = (create, deps) => {
+	const dispatcher = resolveDispatcher();
+	return dispatcher.useLayoutEffect(create, deps);
+};
+
 export const useTransition: Dispatcher['useTransition'] = () => {
 	const dispatcher = resolveDispatcher();
 	return dispatcher.useTransition();

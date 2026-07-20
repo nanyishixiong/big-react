@@ -2,3 +2,4 @@
 
 export const HookHasEffect = 0b0001; // 是否需要触发effect回调
 export const Passive = 0b0010; // 对于effect hook，Passive代表useEffect这个hook对应的effect
+export const Layout = 0b0100; // 对于effect hook，Layout代表useLayoutEffect这个hook对应的effect

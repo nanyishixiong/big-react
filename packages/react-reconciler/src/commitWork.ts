@@ -20,6 +20,7 @@ import {
 	PassiveEffect,
 	Flags,
 	LayoutMask,
+	LayoutEffect,
 	Ref,
 	Visibility
 } from './fiberFlags';
@@ -31,7 +32,7 @@ import {
 	OffscreenComponent
 } from './workTags';
 import { Effect, FCUpdateQueue } from './fiberHooks';
-import { HookHasEffect } from './hookEffectTags';
+import { HookHasEffect, Layout } from './hookEffectTags';
 
 let nextEffect: FiberNode | null = null;
 
@@ -198,6 +199,16 @@ const commitLayoutEffectsOnFiber = (finishedWork: FiberNode) => {
 		// 删除 Ref 的副作用标记
 		finishedWork.flags &= ~Ref;
 	}
+
+	// useLayoutEffect 在layout阶段同步执行：先执行上一次的destroy，再执行本次的create
+	if ((flags & LayoutEffect) !== Noflags && tag === FunctionComponent) {
+		const updateQueue = finishedWork.updateQueue as FCUpdateQueue<any>;
+		if (updateQueue !== null && updateQueue.lastEffect !== null) {
+			commitHookEffectListDestroy(Layout | HookHasEffect, updateQueue.lastEffect);
+			commitHookEffectListCreate(Layout | HookHasEffect, updateQueue.lastEffect);
+		}
+		finishedWork.flags &= ~LayoutEffect;
+	}
 };
 
 // 绑定ref
@@ -275,6 +286,17 @@ function commitHookEffectList(
 	} while (effect !== lastEffect.next);
 }
 
+// 组件卸载时同步执行useLayoutEffect的destroy
+function commitLayoutEffectUnmount(fiber: FiberNode) {
+	if (fiber.tag !== FunctionComponent) {
+		return;
+	}
+	const updateQueue = fiber.updateQueue as FCUpdateQueue<any>;
+	if (updateQueue !== null && updateQueue.lastEffect !== null) {
+		commitHookEffectListUnmount(Layout, updateQueue.lastEffect);
+	}
+}
+
 export function commitHookEffectListUnmount(flags: Flags, lastEffect: Effect) {
 	commitHookEffectList(flags, lastEffect, (effect) => {
 		const destory = effect.destroy;
@@ -340,8 +362,10 @@ function commitDeletion(childToDelete: FiberNode, root: FiberRootNode) {
 				recordHostChildrenToDelete(rootChildrenToDelete, unmountFiber);
 				return;
 			case FunctionComponent:
-				// TODO useEffect unmount
+				// useEffect（Passive）异步收集，稍后统一执行destroy
 				commitPassiveEffect(unmountFiber, root, 'unmount');
+				// useLayoutEffect（Layout）在此同步执行destroy，且发生在DOM移除之前
+				commitLayoutEffectUnmount(unmountFiber);
 				return;
 			default:
 				if (__DEV__) {

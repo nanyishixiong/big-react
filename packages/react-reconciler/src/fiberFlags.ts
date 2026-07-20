@@ -11,12 +11,13 @@ export const Ref = 0b00000000000000000001000000;
 export const Visibility = 0b00000000000000000000100000; // 标识fiber节点是否有显隐状态变化
 export const DidCapture = 0b00000000000000000001000000; // 捕获到something
 export const ShouldCapture = 0b00000000000000000010000000; // unwind应该捕获、还未捕获到
+export const LayoutEffect = 0b00000000000000000100000000; // 对于fiber节点，代表本次更新存在useLayoutEffect副作用
 
 // mutation 阶段需要执行的操作
 export const MutationMask =
 	Placement | Update | ChildDeletion | Ref | Visibility;
 // Layout 阶段需要执行的操作
-export const LayoutMask = Ref;
+export const LayoutMask = Ref | LayoutEffect;
 // 本次更新需要触发useEffect 卸载阶段也需要触发useEffect，return一个函数在卸载阶段触发
 export const PassiveMask = PassiveEffect | ChildDeletion;
 

@@ -13,7 +13,7 @@ import {
 	PendingPassiveEffects,
 	createWorkInProgress
 } from './fiber';
-import { MutationMask, Noflags, PassiveMask } from './fiberFlags';
+import { LayoutMask, MutationMask, Noflags, PassiveMask } from './fiberFlags';
 import {
 	Lane,
 	NoLane,
@@ -394,9 +394,10 @@ function commitRoot(root: FiberRootNode) {
 	// 判断是否存在3个子阶段需要执行的操作
 	// root 的 flags root 的 subtreeFlags 是否包含MutationMask中的Flags，如果有则存在mutation阶段需要执行的操作
 	const subtreeHasEffect =
-		(finishedWork.subtreeFlags & (MutationMask | PassiveMask)) !== Noflags;
+		(finishedWork.subtreeFlags & (MutationMask | LayoutMask | PassiveMask)) !==
+		Noflags;
 	const rootHasEffect =
-		(finishedWork.flags & (MutationMask | PassiveMask)) !== Noflags;
+		(finishedWork.flags & (MutationMask | LayoutMask | PassiveMask)) !== Noflags;
 
 	if (subtreeHasEffect || rootHasEffect) {
 		// beforeMutation

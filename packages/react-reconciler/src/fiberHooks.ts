@@ -14,8 +14,8 @@ import { Action, ReactContext, Thenable, Usable } from 'shared/ReactTypes';
 import { scheduleUpdateOnFiber } from './workLoop';
 import { Lane, NoLane, mergeLanes, requestUpdateLane } from './fiberLanes';
 import { markWorkInProgressReceivedUpdate } from './beginWork';
-import { Flags, PassiveEffect } from './fiberFlags';
-import { HookHasEffect, Passive } from './hookEffectTags';
+import { Flags, PassiveEffect, LayoutEffect } from './fiberFlags';
+import { HookHasEffect, Passive, Layout } from './hookEffectTags';
 import { REACT_CONTEXT_TYPE } from 'shared/ReactSymbols';
 import { trackUsedThenable } from './thenable';
 
@@ -85,6 +85,7 @@ export function renderWithHooks(wip: FiberNode, lane: Lane) {
 const HooksDispatcherOnMount: Dispatcher = {
 	useState: mountState,
 	useEffect: mountEffect,
+	useLayoutEffect: mountLayoutEffect,
 	useTransition: mountTransition,
 	useRef: mountRef,
 	useMemo: mountMemo,
@@ -96,6 +97,7 @@ const HooksDispatcherOnMount: Dispatcher = {
 const HooksDispatcherOnUpdate: Dispatcher = {
 	useState: updateState,
 	useEffect: updateEffect,
+	useLayoutEffect: updateLayoutEffect,
 	useTransition: updateTransition,
 	useRef: updateRef,
 	useMemo: updateMemo,
@@ -209,6 +211,53 @@ function updateEffect(create: EffectCallback | void, deps: EffectDeps | void) {
 		(currentlyRenderingFiber as FiberNode).flags |= PassiveEffect;
 		hook.memoizedState = pushEffect(
 			Passive | HookHasEffect,
+			create,
+			destroy,
+			nextDeps
+		);
+	}
+}
+
+function mountLayoutEffect(
+	create: EffectCallback | void,
+	deps: EffectDeps | void
+) {
+	const hook = mountWorkInProgresHook();
+	const nextDeps = deps === undefined ? null : deps;
+	// mount 时需要处理副作用
+	(currentlyRenderingFiber as FiberNode).flags |= LayoutEffect;
+
+	hook.memoizedState = pushEffect(
+		Layout | HookHasEffect,
+		create,
+		undefined,
+		nextDeps
+	);
+}
+
+function updateLayoutEffect(
+	create: EffectCallback | void,
+	deps: EffectDeps | void
+) {
+	const hook = updateWorkInProgresHook();
+	const nextDeps = deps === undefined ? null : deps;
+	let destroy: EffectCallback | void;
+
+	if (currentHook !== null) {
+		const prevEffect = currentHook.memoizedState as Effect;
+		destroy = prevEffect.destroy;
+		if (nextDeps !== null) {
+			// 浅比较依赖
+			const prevDeps = prevEffect.deps;
+			if (areHookInputsEqual(nextDeps, prevDeps)) {
+				hook.memoizedState = pushEffect(Layout, create, destroy, nextDeps);
+				return;
+			}
+		}
+		// nextDeps 不为 null（对应没传数组） 或 浅比较不相等
+		(currentlyRenderingFiber as FiberNode).flags |= LayoutEffect;
+		hook.memoizedState = pushEffect(
+			Layout | HookHasEffect,
 			create,
 			destroy,
 			nextDeps
